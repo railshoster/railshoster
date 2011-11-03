@@ -21,4 +21,6 @@ Gem::Specification.new do |s|
   s.add_dependency "capistrano"
   s.add_dependency "capistrano-ext"
   s.add_dependency "gli", ">= 1.2.5"
+  s.add_dependency "json"
+  s.add_dependency "git"
 end

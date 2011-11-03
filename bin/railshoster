@@ -15,17 +15,22 @@ version Railshoster::VERSION
 program_desc "RailsHoster.com Application Deployment Suite"
 
 desc 'Create new RailsHoster application deployment'
-arg_name 'application_token'
+arg_name 'dir_name'
 long_desc 'This command helps to deploy a Ruby on Rails application to your RailsHoster account using the application token you have received after signing up.'
 command [:init] do |c|
+  
+  c.desc "Use the RailsHoster application_token pass your account credentials."
+  c.flag [:a, :apptoken]      
 
   c.action do |global_options,options,args|
-    raise "Argument 'application_token' is required for the 'init' command." if args.empty?
     
-    app_token = args[0]
+    raise "Argument 'dir_name' is required for the 'init' command." if args.empty?
+    raise "Option '-a' or '--apptoken' is require for the 'init' comannd" unless options[:a]
     
-    #TODO execute deployment preparation
-    puts "Your token is #{app_token}"
+    project_git_dir_name = args[0]
+        
+    init_command = RailsHoster::InitCommand.new(project_git_dir_name)
+    init_command.run_by_application_token(options[:a])
   end
 end
 
@@ -41,9 +46,23 @@ post do |global,command,options,args|
 end
 
 on_error do |exception|
+  puts "\n"
+  puts "-" * 50
+  puts "Sorry. An Exception has occured. Don't worry I try to explain what happened:"
+  puts "-" * 50
+  puts "The Exception class is: #{exception.class}"
+  puts "The Exception message is:\n"
+  puts exception.message
+  puts "Here is the backtrace:"
+  puts "-" * 50
+  puts exception.backtrace
+  puts "-" * 50
+  puts "If this does not help write to support@railshoster.com."
+  puts "Please provide the command you invoked, in which directory as well as information about your runtime environment (Ruby Version, OS, ...)."
+  
   # Error logic here
   # return false to skip default error handling
-  true
+  false
 end
 
 exit GLI.run(ARGV)
