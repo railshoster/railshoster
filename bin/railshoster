@@ -1,10 +1,14 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
-
 require 'rubygems'
-require 'bundler/setup'
-require 'railshoster'
+# require 'bundler/setup'
+
+gem "json"
+gem "git"
+gem 'erubis'
+gem "gli"
+
+require File.join(File.dirname(__FILE__), '..', 'lib', 'railshoster')
 
 require 'gli'
 include GLI
