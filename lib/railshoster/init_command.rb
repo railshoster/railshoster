@@ -10,9 +10,12 @@ module RailsHoster
   # This action class helps to setup a new rails applicaton
   class InitCommand
     
-    def initialize(git_dir)
+    def initialize(project_dir)
+      
+      @project_dir = project_dir
+      
       begin      
-        @git = Git.open(git_dir)
+        @git = Git.open(project_dir)
       rescue ArgumentError => e
         raise PossiblyNotAGitRepoError.new(e)
       end
@@ -27,18 +30,22 @@ module RailsHoster
       app_hash = parse_application_json_hash(application_hash_as_json_string)
       
       git_url = get_git_remote_url_from_git_config          
-      app_hash[:git] = git_url
+      app_hash["git"] = git_url
+
+      deployrb_str = ""
       
       # Choose the further process depending on the application type by applying a strategy pattern.
       case app_hash["t"].to_sym
         when :h
           # Shared Hosting Deployments
-          Railshoster::Capistrano::H.run(app_hash)
+          deployrb_str = Railshoster::Capistrano::H.render_deploy_rb_to_s(app_hash)
         # Later also support VPS Deployments
         # when :v
         else
           raise UnsupportedApplicationTypeError.new
       end
+      
+      write_deploy_rb(deployrb_str)
     end
     
     protected
@@ -57,6 +64,32 @@ module RailsHoster
       
       #TODO Error management: what if there is not remote url (local repo)?
       @git.config('remote.origin.url')
+    end
+    
+    def write_deploy_rb(deployrb_str)
+      deployrb_basepath = File.join(@project_dir, "config")
+      FileUtils.mkdir_p(deployrb_basepath)
+      
+      deployrb_path = File.join(deployrb_basepath, "deploy.rb")
+      backup_file(deployrb_path) if File.exists?(deployrb_path)
+      
+      File.open(deployrb_path, "w+") do |f|
+        f << deployrb_str
+      end
+    end
+    
+    # Creates a backup of a file.
+    # If there is already a backup 
+    #TODO Test
+    def backup_file(path)
+      backup_path = path + ".bak"
+            
+      if File.exists?(backup_path) then
+        # There is already a backup, so we need to backup the backup first.
+        backup_file(backup_path)
+      end
+      
+      FileUtils.cp(path, backup_path)      
     end
   end
   

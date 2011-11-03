@@ -1,16 +1,17 @@
+require 'erubis'
+
 module Railshoster
   module Capistrano
     
     # Strategy to generate a capistrano config for a shared hosting
     class H
       
-      def run(application_hash)
-        puts "Please implement the strategy to prepare a shared hosting app. We need strategy dependent folders to store the capistrano templates."        
-      end
+      #### Static
       
-      def self.run(application_hash)
-        h = new
-        h.run(application_hash)
+      def self.render_deploy_rb_to_s(application_hash)
+        deployrb_template = File.read(File.join(File.dirname(__FILE__), "../../../templates/h/deploy.rb.erb"))
+        eruby = Erubis::Eruby.new(deployrb_template)
+        eruby.result(:app => application_hash)
       end
     end
   end
