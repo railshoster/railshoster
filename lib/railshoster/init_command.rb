@@ -3,7 +3,7 @@ require 'json'
 require 'git'
 require 'fileutils'
 
-require 'railshoster/capistrano/h'
+require File.join(File.dirname(__FILE__), '/capistrano/h')
 
 module RailsHoster
   
