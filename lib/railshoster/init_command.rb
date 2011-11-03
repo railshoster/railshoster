@@ -8,17 +8,10 @@ require File.join(File.dirname(__FILE__), '/capistrano/h')
 module RailsHoster
   
   # This action class helps to setup a new rails applicaton
-  class InitCommand
+  class InitCommand < Command        
     
     def initialize(project_dir)
-      
-      @project_dir = project_dir
-      
-      begin      
-        @git = Git.open(project_dir)
-      rescue ArgumentError => e
-        raise PossiblyNotAGitRepoError.new(e)
-      end
+      super(project_dir)
     end
         
     def run_by_application_token(application_token) 
@@ -94,9 +87,8 @@ module RailsHoster
       FileUtils.cp(path, backup_path)      
     end
     
-    def capify_project
-      capfile_path = File.join(@project_dir, "Capfile")
-      puts "\n\tWarning: You are initializing a project with an existing Capfile.\n" if File.exists?(capfile_path)      
+    def capify_project      
+      puts "\n\tWarning: You are initializing a project with an existing Capfile.\n" if capfile_exists?
       successful = system("capify #{@project_dir}")
       raise CapifyProjectFailedError.new("Couldn't capify project at #{@project_dir}") unless successful
     end

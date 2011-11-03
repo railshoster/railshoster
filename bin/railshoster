@@ -9,6 +9,7 @@ gem 'erubis'
 gem "gli"
 
 require File.join(File.dirname(__FILE__), '..', 'lib', 'railshoster')
+require 'fileutils'
 
 require 'gli'
 include GLI
@@ -17,7 +18,7 @@ version Railshoster::VERSION
 
 program_desc "RailsHoster.com Application Deployment Suite"
 
-desc 'Create new RailsHoster application deployment'
+desc 'Create new RailsHoster.com application deployment'
 arg_name 'dir_name'
 long_desc 'This command helps to deploy a Ruby on Rails application to your RailsHoster account using the application token you have received after signing up.'
 command [:init] do |c|
@@ -34,6 +35,16 @@ command [:init] do |c|
         
     init_command = RailsHoster::InitCommand.new(project_git_dir_name)
     init_command.run_by_application_token(options[:a])
+  end
+end
+
+desc "Deploy your application to RailsHoster.com"
+arg_name 'dir_name'
+long_desc "Use this command to deploy your application to RailsHoster.com after you have successfully initialized it using the 'init' command."
+command [:deploy] do |c|
+  c.action do |global_options,options,args|
+    project_git_dir_name = args[0] || FileUtils.pwd
+    RailsHoster::DeployCommand.new(project_git_dir_name).deploy
   end
 end
 
