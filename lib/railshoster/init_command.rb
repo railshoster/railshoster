@@ -46,6 +46,8 @@ module RailsHoster
       end
       
       write_deploy_rb(deployrb_str)
+      capify_project
+      success_message
     end
     
     protected
@@ -91,11 +93,26 @@ module RailsHoster
       
       FileUtils.cp(path, backup_path)      
     end
+    
+    def capify_project
+      capfile_path = File.join(@project_dir, "Capfile")
+      puts "\n\tWarning: You are initializing a project with an existing Capfile.\n" if File.exists?(capfile_path)      
+      successful = system("capify #{@project_dir}")
+      raise CapifyProjectFailedError.new("Couldn't capify project at #{@project_dir}") unless successful
+    end
+    
+    def success_message
+      puts "Your application has been successfully initialized."
+      puts "You can now use 'cap deploy' to deploy your app."
+    end
   end
   
   class PossiblyNotAGitRepoError < ArgumentError
   end
   
-  class UnsupportedApplicationTypeError < ArgumentError
+  class UnsupportedApplicationTypeError < StandardError
+  end
+  
+  class CapifyProjectFailedError < StandardError
   end
 end
