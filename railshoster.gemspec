@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Julian Fischer"]
   s.email       = ["fischer@enterprise-rails.de"]
   s.homepage    = "http://www.railshoster.com"
-  s.summary     = %q{RailsHoster Deployment Gem}
+  s.summary     = %q{RailsHoster Applicatoin Deployment Suite}
   s.description = %q{Easily deploy your Rails app to RailsHoster.com by using this gem.}
 
   s.rubyforge_project = "railshoster"
