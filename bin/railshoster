@@ -1,0 +1,49 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+
+require 'rubygems'
+require 'bundler/setup'
+
+require 'railshoster'
+require 'gli'
+
+include GLI
+
+version Railshoster::VERSION
+
+program_desc "RailsHoster.com Application Deployment Suite"
+
+desc 'Create new RailsHoster application deployment'
+arg_name 'application_token'
+long_desc 'This command helps to deploy a Ruby on Rails application to your RailsHoster account using the application token you have received after signing up.'
+command [:init] do |c|
+
+  c.action do |global_options,options,args|
+    raise "Argument 'application_token' is required for the 'init' command." if args.empty?
+    
+    app_token = args[0]
+    
+    #TODO execute deployment preparation
+    puts "Your token is #{app_token}"
+  end
+end
+
+pre do |global,command,options,args|
+  # Pre logic here
+  # Return true to proceed; false to abourt and not call the
+  # chosen command
+  true
+end
+
+post do |global,command,options,args|
+  # Post logic here
+end
+
+on_error do |exception|
+  # Error logic here
+  # return false to skip default error handling
+  true
+end
+
+exit GLI.run(ARGV)
