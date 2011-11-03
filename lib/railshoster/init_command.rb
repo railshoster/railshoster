@@ -27,7 +27,16 @@ module RailsHoster
       git_url = get_git_remote_url_from_git_config          
       app_hash[:git] = git_url
       
-      puts app_hash.inspect
+      # Choose the further process depending on the application type by applying a strategy pattern.
+      case app_hash["t"].to_sym
+        when :h
+          # Shared Hosting Deployments
+          puts "Please implement the strategy to prepare a shared hosting app. We need strategy dependent folders to store the capistrano templates."
+        # Later also support VPS Deployments
+        # when :v
+        else
+          raise UnsupportedApplicationTypeError.new
+      end
     end
     
     protected
@@ -50,5 +59,8 @@ module RailsHoster
   end
   
   class PossiblyNotAGitRepoError < ArgumentError
+  end
+  
+  class UnsupportedApplicationTypeError < ArgumentError
   end
 end
