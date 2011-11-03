@@ -3,6 +3,8 @@ require 'json'
 require 'git'
 require 'fileutils'
 
+require 'railshoster/capistrano/h'
+
 module RailsHoster
   
   # This action class helps to setup a new rails applicaton
@@ -31,7 +33,7 @@ module RailsHoster
       case app_hash["t"].to_sym
         when :h
           # Shared Hosting Deployments
-          puts "Please implement the strategy to prepare a shared hosting app. We need strategy dependent folders to store the capistrano templates."
+          Railshoster::Capistrano::H.run(app_hash)
         # Later also support VPS Deployments
         # when :v
         else
