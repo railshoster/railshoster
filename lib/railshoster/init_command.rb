@@ -95,7 +95,8 @@ module RailsHoster
     
     def success_message
       puts "Your application has been successfully initialized."
-      puts "You can now use 'cap deploy' to deploy your app."
+      puts "\n\tYou can now use 'railshoster deploy' to deploy your app.\n\n"
+      puts "Alternatively, you can use capistrano commands such as 'cap deploy' and 'cap shell'."
     end
   end
   
