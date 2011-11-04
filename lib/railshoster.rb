@@ -1,4 +1,5 @@
 require File.join(File.dirname(__FILE__), 'railshoster/version')
+require File.join(File.dirname(__FILE__), 'railshoster/utilities')
 require File.join(File.dirname(__FILE__), 'railshoster/command')
 require File.join(File.dirname(__FILE__), 'railshoster/possibly_not_a_git_repo_error')
 require File.join(File.dirname(__FILE__), 'railshoster/unsupported_application_type_error')

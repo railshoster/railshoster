@@ -24,4 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency "json"
   s.add_dependency "git"
   s.add_dependency 'erubis'
+  
+  s.add_development_dependency('rspec')
+  s.add_development_dependency('fakefs')
 end

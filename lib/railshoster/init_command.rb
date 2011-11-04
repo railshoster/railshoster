@@ -66,26 +66,12 @@ module Railshoster
       FileUtils.mkdir_p(deployrb_basepath)
       
       deployrb_path = File.join(deployrb_basepath, "deploy.rb")
-      backup_file(deployrb_path) if File.exists?(deployrb_path)
+      Railshoster::Utilities.backup_file(deployrb_path) if File.exists?(deployrb_path)
       
       File.open(deployrb_path, "w+") do |f|
         f << deployrb_str
       end
-    end
-    
-    # Creates a backup of a file.
-    # If there is already a backup 
-    #TODO Test
-    def backup_file(path)
-      backup_path = path + ".bak"
-            
-      if File.exists?(backup_path) then
-        # There is already a backup, so we need to backup the backup first.
-        backup_file(backup_path)
-      end
-      
-      FileUtils.cp(path, backup_path)      
-    end
+    end      
     
     def capify_project      
       puts "\n\tWarning: You are initializing a project with an existing Capfile.\n" if capfile_exists?
