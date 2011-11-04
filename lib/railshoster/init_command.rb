@@ -5,7 +5,7 @@ require 'fileutils'
 
 require File.join(File.dirname(__FILE__), '/capistrano/h')
 
-module RailsHoster
+module Railshoster
   
   # This action class helps to setup a new rails applicaton
   class InitCommand < Command        

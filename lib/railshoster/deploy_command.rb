@@ -1,4 +1,4 @@
-module RailsHoster
+module Railshoster
   
   # This action class helps to setup a new rails applicaton
   class DeployCommand < Command
