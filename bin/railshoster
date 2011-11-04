@@ -33,7 +33,7 @@ command [:init] do |c|
     
     project_git_dir_name = args[0]
         
-    init_command = RailsHoster::InitCommand.new(project_git_dir_name)
+    init_command = Railshoster::InitCommand.new(project_git_dir_name)
     init_command.run_by_application_token(options[:a])
   end
 end
@@ -44,7 +44,7 @@ long_desc "Use this command to deploy your application to RailsHoster.com after 
 command [:deploy] do |c|
   c.action do |global_options,options,args|
     project_git_dir_name = args[0] || FileUtils.pwd
-    RailsHoster::DeployCommand.new(project_git_dir_name).deploy
+    Railshoster::DeployCommand.new(project_git_dir_name).deploy
   end
 end
 
