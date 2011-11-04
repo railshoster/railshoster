@@ -99,13 +99,4 @@ module RailsHoster
       puts "Alternatively, you can use capistrano commands such as 'cap deploy' and 'cap shell'."
     end
   end
-  
-  class PossiblyNotAGitRepoError < ArgumentError
-  end
-  
-  class UnsupportedApplicationTypeError < StandardError
-  end
-  
-  class CapifyProjectFailedError < StandardError
-  end
 end
