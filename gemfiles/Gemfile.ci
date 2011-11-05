@@ -1,3 +1,13 @@
 source 'http://rubygems.org'
 
-gemspec
+gem "capistrano"
+gem "capistrano-ext"
+gem "gli", ">= 1.2.5"
+gem "json"
+gem "git"
+gem 'erubis'
+
+group :test do
+  gem 'rspec'
+  gem 'fakefs'
+end
