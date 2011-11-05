@@ -58,7 +58,7 @@ module Railshoster
     def get_git_remote_url_from_git_config
       
       #TODO Error management: what if there is not remote url (local repo)?
-      @git.config('remote.origin.url')
+      @git.config['remote.origin.url']
     end
     
     def write_deploy_rb(deployrb_str)
