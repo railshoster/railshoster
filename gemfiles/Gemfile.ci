@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 
+gem "rake"
 gem "capistrano"
 gem "capistrano-ext"
 gem "gli", ">= 1.2.5"
