@@ -12,3 +12,4 @@ h2. 2.0.0
 h3. General TODOs
 
 * Railshoster::InitCommand - Check wether it is possible to replace "system" call with a pure ruby version possibly by using the capistrano gem directly via ruby.
+* Test bin/railshoster

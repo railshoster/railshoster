@@ -3,7 +3,7 @@ require 'json'
 require 'git'
 require 'fileutils'
 
-require File.join(File.dirname(__FILE__), '/capistrano/h')
+require File.expand_path(File.join(File.dirname(__FILE__), '/capistrano/h'))
 
 module Railshoster
   
@@ -16,7 +16,16 @@ module Railshoster
         
     def run_by_application_token(application_token) 
       decoded_token = decode_token(application_token)
-      run_by_application_hash(decoded_token)
+      
+      begin
+        run_by_application_hash(decoded_token)
+      rescue BadApplicationJSONHashError => e
+        msg = "Please verify your application_token. It did not decode to a valid application hash.\n" +
+          "This is how your application token looked like:\n\n#{application_token.inspect}\n\n" +
+          "Please compare your application token char by char with your account information mail and try again!\n" +
+          "Here is what the application hash parser said:\n\n"
+        raise BadApplicationTokenError.new(msg + e.message)
+      end
     end
     
     def run_by_application_hash(application_hash_as_json_string)
@@ -47,12 +56,17 @@ module Railshoster
     
     # Decodoes token to get the JSON hash back.
     # gQkUSMakKRPhm0EIaer => {"key":"value"}
-    def decode_token(token)
+    def decode_token(token)      
       Base64.decode64(token)
     end
     
     def parse_application_json_hash(app_hash_as_json_string)
-      ruby_app_hash = ::JSON.parse(app_hash_as_json_string)      
+      begin
+        ruby_app_hash = ::JSON.parse(app_hash_as_json_string)      
+      rescue JSON::ParserError => e      
+        msg = "The application hash you have passed is malformed. It could not be parsed as regular JSON. It looked like this:\n\n #{app_hash_as_json_string.inspect}\n"  
+        raise BadApplicationJSONHashError.new(msg + "\nHere is what the JSON parse said:\n\n" + e.message)
+      end
     end
     
     def get_git_remote_url_from_git_config

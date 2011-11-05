@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), "..", "..", "spec_helper.rb")
+require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "spec_helper.rb"))
 
 describe Railshoster::InitCommand do
   
@@ -31,11 +31,19 @@ describe Railshoster::InitCommand do
     it "should gracefully die for a git project dir without a remote origin" do
       pending("no remote origin -> no repo url -> no deploy rb -> fail")
     end
+    
+    it "should raise an BadApplicationJSONHashError error for an invalid incoming JSON hash" do      
+      expect { @init.send(:parse_application_json_hash, "") }.to raise_error(Railshoster::BadApplicationJSONHashError)
+    end
   end
   
   describe "#run_by_application_token" do
     it "should create a deploy rb and capify the project" do
       pending("use fakefs to test this.")
+    end
+    
+    it "should raise an BadApplicationTokenError error for an invalid incoming application token" do      
+      expect { @init.send(:run_by_application_token, "abab") }.to raise_error(Railshoster::BadApplicationTokenError)
     end
   end
 end

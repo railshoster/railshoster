@@ -1,5 +1,5 @@
 module Railshoster
-  class PossiblyNotAGitRepoError < ArgumentError
+  class BadApplicationTokenError < ArgumentError
     include Railshoster::Error
   end
 end

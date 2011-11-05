@@ -7,9 +7,9 @@ gem "json"
 gem "git"
 gem 'erubis'
 gem "gli"
-
-require File.join(File.dirname(__FILE__), '..', 'lib', 'railshoster')
 require 'fileutils'
+
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'railshoster'))
 
 require 'gli'
 include GLI
@@ -26,12 +26,13 @@ command [:init] do |c|
   c.desc "Use the RailsHoster application_token pass your account credentials."
   c.flag [:a, :apptoken]      
 
-  c.action do |global_options,options,args|
-    
-    raise "Argument 'dir_name' is required for the 'init' command." if args.empty?
-    raise "Option '-a' or '--apptoken' is require for the 'init' comannd" unless options[:a]
-    
-    project_git_dir_name = args[0]
+  c.action do |global_options,options,args|    
+
+    raise "Option '-a' or '--apptoken' is require for the 'init' command. How else should I know where you want to deploy to?" unless options[:a]
+
+    cwd = FileUtils.pwd      
+    ask_for_project_dir(cwd) if args.empty?        
+    project_git_dir_name = args[0] || cwd
         
     init_command = Railshoster::InitCommand.new(project_git_dir_name)
     init_command.run_by_application_token(options[:a])
@@ -59,7 +60,18 @@ post do |global,command,options,args|
   # Post logic here
 end
 
-on_error do |exception|
+# Invoke the app like this RAILSHOSTER_DEV=1 ~/git/railshoster/bin/railshoster 
+# in order to receive a full stack trace in case of errors.
+on_error do |exception|  
+  ret = true
+  ret = print_error(exception) if ENV["RAILSHOSTER_DEV"]  
+  ret
+end
+
+#### Helper methods
+
+def print_error(exception)    
+  
   puts "\n"
   puts "-" * 50
   puts "Sorry. An Exception has occured. Don't worry I try to explain what happened:"
@@ -73,10 +85,17 @@ on_error do |exception|
   puts "-" * 50
   puts "If this does not help write to support@railshoster.com."
   puts "Please provide the command you invoked, in which directory as well as information about your runtime environment (Ruby Version, OS, ...)."
-  
-  # Error logic here
-  # return false to skip default error handling
   false
+end
+
+def ask_for_project_dir(current_working_dir)  
+  puts "You have not specified your local project folder to be deployed.\n" +
+    "I assume you want to use your current working directory: #{current_working_dir}.\n"
+  print "Correct? (y/n) [n]: "
+  decision = STDIN.getc
+  if decision !~ /y/i then
+    exit_now!("Initialization aborted.", -1)
+  end      
 end
 
 exit GLI.run(ARGV)
