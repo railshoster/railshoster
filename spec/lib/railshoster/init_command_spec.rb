@@ -10,7 +10,7 @@ describe Railshoster::InitCommand do
   
   describe "#Git" do 
     it "should read the git repo url" do
-      @init.send(:get_git_remote_url_from_git_config).should eql("git@github.com:railshoster/railshoster.git")
+      @init.send(:get_git_remote_url_from_git_config).should =~ /railshoster/
     end
     
     #TODO
