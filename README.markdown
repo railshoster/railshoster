@@ -1,6 +1,10 @@
 h1. RailsHoster Deployment Suite
 
-INTRDUCTON TEXT. TO BE DONE.
+The RailsHoster Deployment gem helps you to easily get your Rails app runing at RailsHoster.com. Check it out.
+
+h2. Travis Status of the current dev branch
+
+[![Build Status](https://secure.travis-ci.org/[railshoster]/[railshoster].png)](http://travis-ci.org/[railshoster]/[railshoster])
 
 h2. Requirements
 
