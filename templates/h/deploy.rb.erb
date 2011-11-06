@@ -44,7 +44,7 @@ default_run_options[:pty] = true
 set :use_sudo, false
 
 # set the location where to deploy the new project
-set :deploy_to, "/home/#{user}/#{application}/shared/bundle"
+set :deploy_to, "/home/#{user}/#{application}"
 
 # live
 role :app, "<%= app["h"]%>"

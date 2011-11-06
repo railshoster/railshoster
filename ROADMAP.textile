@@ -13,3 +13,4 @@ h3. General TODOs
 
 * Railshoster::InitCommand - Check wether it is possible to replace "system" call with a pure ruby version possibly by using the capistrano gem directly via ruby.
 * Test bin/railshoster
+* railshoster deploy should check capistrano's exit status and respond to that in case of a failure.

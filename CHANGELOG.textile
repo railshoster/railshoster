@@ -31,3 +31,7 @@ h3. 0.1.0
 * "railshoster deploy" now can only be invoked if there's a Capfile and a deploy.rb.
 * Added "railshoster appurl" show the default railshoster app url. This command can only be invoked if there's a Capfile and a deploy.rb.
 * It now shows the appurl after invoking "railshoster deploy".
+
+h3. 0.1.1
+
+* Fixed deploy_to path in deploy.rb
