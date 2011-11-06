@@ -19,6 +19,10 @@ h3. 0.0.3
 * Enhanced error messages for invalid application tokens.
 * Initial README.
 
+h3. 0.4.0
+
+* 0.4.0 has become 0.1.0 since features have been added.
+
 h3. 0.1.0
 
 * Added Railshoster Bundler settings to generate binstubs. Hence you don't have to use "bundle exec" all the time. See http://gembundler.com/deploying.html for more details.
