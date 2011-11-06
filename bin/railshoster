@@ -35,7 +35,7 @@ command [:init] do |c|
     project_git_dir_name = args[0] || cwd
         
     init_command = Railshoster::InitCommand.new(project_git_dir_name)
-    init_command.run_by_application_token(options[:a])
+    init_command.run_by_application_token(options[:a])    
   end
 end
 
@@ -46,6 +46,19 @@ command [:deploy] do |c|
   c.action do |global_options,options,args|
     project_git_dir_name = args[0] || FileUtils.pwd
     Railshoster::DeployCommand.new(project_git_dir_name).deploy
+    
+    puts "\nNow, where you have deployed your app you might want to have a look at it. You can find it here:"
+    
+    Railshoster::AppUrlCommand.new(project_git_dir_name).show
+  end
+end
+
+desc "Show the default RailsHoster.com URL for your app."
+long_desc "Whenever you ask what the initial RailsHoster.com URL of your app was just invoke this command. It will tell you."
+command [:appurl] do |c|
+  c.action do |global_options,options,args|
+    project_git_dir_name = args[0] || FileUtils.pwd
+    Railshoster::AppUrlCommand.new(project_git_dir_name).show
   end
 end
 
@@ -92,8 +105,8 @@ def ask_for_project_dir(current_working_dir)
   puts "You have not specified your local project folder to be deployed.\n" +
     "I assume you want to use your current working directory: #{current_working_dir}.\n"
   print "Correct? (y/n) [n]: "
-  decision = STDIN.getc
-  if decision !~ /y/i then
+  decision = STDIN.gets.chomp
+  unless %w(y Y).include?(decision) then
     exit_now!("Initialization aborted.", -1)
   end      
 end

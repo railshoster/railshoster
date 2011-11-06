@@ -9,6 +9,7 @@ require File.join(File.dirname(__FILE__), 'railshoster/bad_application_json_hash
 require File.join(File.dirname(__FILE__), 'railshoster/bad_appliction_token_error')
 require File.join(File.dirname(__FILE__), 'railshoster/init_command')
 require File.join(File.dirname(__FILE__), 'railshoster/deploy_command')
+require File.join(File.dirname(__FILE__), 'railshoster/app_url_command')
 
 module Railshoster
 end

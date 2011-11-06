@@ -44,19 +44,20 @@ default_run_options[:pty] = true
 set :use_sudo, false
 
 # set the location where to deploy the new project
-set :deploy_to, "/home/#{user}/#{application}"
+set :deploy_to, "/home/#{user}/#{application}/shared/bundle"
 
 # live
 role :app, "<%= app["h"]%>"
 role :web, "<%= app["h"]%>"
 role :db,  "<%= app["h"]%>", :primary => true
 
+# railshoster bundler settings
+set :bundle_flags, "--deployment --binstubs"
 
 ############################################
 # Default Tasks by RailsHoster.de
 ############################################
 namespace :deploy do
-
   desc "Restarting mod_rails with restart.txt"
   task :restart, :roles => :app, :except => { :no_release => true } do
     run "touch #{current_path}/tmp/restart.txt"
@@ -66,6 +67,15 @@ namespace :deploy do
   task :additional_symlink, :roles => :app do
     run "ln -sf #{shared_path}/config/database.yml #{current_path}/config/database.yml"
   end
-
 end
+
+namespace :railshoster do
+  desc "Show the url of your app."
+  task :appurl do
+    puts "\nThe default RailsHoster.com URL of your app is:"
+    puts "\nhttp://#{user}-<%= app["aid"] %>.<%= app["h"]%>"    
+    puts "\n"
+  end
+end
+
 after "deploy:symlink","deploy:additional_symlink","deploy:migrate"

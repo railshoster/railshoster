@@ -18,3 +18,12 @@ h3. 0.0.3
 * Fixed a Ruby 1.9.x issue.
 * Enhanced error messages for invalid application tokens.
 * Initial README.
+
+h3. 0.1.0
+
+* Added Railshoster Bundler settings to generate binstubs. Hence you don't have to use "bundle exec" all the time. See http://gembundler.com/deploying.html for more details.
+* Bugfix reagarding to keyboard input when no directory is given.
+* Added capistrano task "railshoster:appurl" to show the default railshoster app url.
+* "railshoster deploy" now can only be invoked if there's a Capfile and a deploy.rb.
+* Added "railshoster appurl" show the default railshoster app url. This command can only be invoked if there's a Capfile and a deploy.rb.
+* It now shows the appurl after invoking "railshoster deploy".

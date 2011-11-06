@@ -1,6 +1,6 @@
 module Railshoster
   
-  # This action class helps to setup a new rails applicaton
+  # This action class helps to deploy a rails applicaton
   class DeployCommand < Command
     
     def initialize(project_dir)
@@ -8,11 +8,8 @@ module Railshoster
     end
     
     def deploy
-      if capfile_exists? then
+      if_project_already_initialized do
         system("cap deploy")
-      else
-        puts "\nDeployment abortet!\nYou haven't initialized your application, yet." 
-        puts "Please use the 'railshoster init' command as described in your account information mail you have received from RailsHoster.com and try again.\n\n"
       end
     end
   end
