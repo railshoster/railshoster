@@ -5,7 +5,8 @@ h2. 0.0.1
 
 h2. 1.0.0
 
-* To be specified
+* Remove password from deploy.rb by using an ssh connect at init. Find and copy lokal ssh public key to remot/authorized_keys.
+* Solve database.yml issue - mysql or mysql2. Decide using bundler?
 
 h3. Product Backlog
 
@@ -17,4 +18,3 @@ h3. General TODOs
 * Railshoster::InitCommand - Check wether it is possible to replace "system" call with a pure ruby version possibly by using the capistrano gem directly via ruby.
 * Test bin/railshoster
 * railshoster deploy should check capistrano's exit status and respond to that in case of a failure.
-* Database.yml issue - mysql or mysql2 - Problem.
