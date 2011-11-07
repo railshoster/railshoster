@@ -23,19 +23,32 @@ arg_name 'dir_name'
 long_desc 'This command helps to deploy a Ruby on Rails application to your RailsHoster account using the application token you have received after signing up.'
 command [:init] do |c|
   
-  c.desc "Use the RailsHoster application_token pass your account credentials."
+  c.desc "Use the RailsHoster application_token to pass your account credentials."
   c.flag [:a, :apptoken]      
+  
+  c.desc "Use a json string to pass your account credentials."
+  c.flag [:j, :json]
 
   c.action do |global_options,options,args|    
 
-    raise "Option '-a' or '--apptoken' is require for the 'init' command. How else should I know where you want to deploy to?" unless options[:a]
+    unless (options[:a] || options[:j]) then
+      raise "Option '-a' or '-j' is required for the 'init' command.\n" +
+        "How else should I know where you want to deploy to?"
+    end
 
     cwd = FileUtils.pwd      
     ask_for_project_dir(cwd) if args.empty?        
     project_git_dir_name = args[0] || cwd
         
     init_command = Railshoster::InitCommand.new(project_git_dir_name)
-    init_command.run_by_application_token(options[:a])    
+    
+    if options[:a] then
+      init_command.run_by_application_token(options[:a])    
+    elsif options[:j] then
+      init_command.run_by_application_hash(options[:j])    
+    else
+      raise "Illegal State."
+    end
   end
 end
 

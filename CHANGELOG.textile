@@ -35,3 +35,9 @@ h3. 0.1.0
 h3. 0.1.1
 
 * Fixed deploy_to path in deploy.rb
+
+h3. 0.2.0
+
+* Added flag for init command to pass app credentials via json hash such as: 
+
+bc. railshoster init -json '{"t":"h","u":"user999999999","a":"rails1","h":"zeta.railshoster.de","p":"mypass"}' .
