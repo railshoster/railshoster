@@ -12,6 +12,7 @@ h3. Product Backlog
 
 * RailsHoster VPS Deployments
 * Mailer-Configuration
+* Multistage Deployments - Deploy an app to a shared hosting (e.g. dev) and to a VPS (production).
 
 h3. General TODOs
 

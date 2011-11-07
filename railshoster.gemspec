@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
   
+  s.add_dependency "bundler", ">= 1.0.15"
   s.add_dependency "capistrano"
   s.add_dependency "capistrano-ext"
   s.add_dependency "gli", ">= 1.2.5"
