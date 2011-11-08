@@ -16,6 +16,9 @@ h3. Product Backlog
 
 h3. General TODOs
 
-* Railshoster::InitCommand - Check wether it is possible to replace "system" call with a pure ruby version possibly by using the capistrano gem directly via ruby.
 * Test bin/railshoster
 * railshoster deploy should check capistrano's exit status and respond to that in case of a failure.
+
+h3. TODOs in this branch
+
+* There seems to be a conflict between what is required in the railshoster-binary and Railshoster::Capistrano::Executor. The executor works is required in irb but not when required from the railhoster-binary.

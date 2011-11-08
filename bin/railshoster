@@ -7,6 +7,8 @@ gem "json"
 gem "git"
 gem 'erubis'
 gem "gli"
+gem "capistrano"
+
 require 'fileutils'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'railshoster'))

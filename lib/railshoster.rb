@@ -7,9 +7,11 @@ require File.join(File.dirname(__FILE__), 'railshoster/unsupported_application_t
 require File.join(File.dirname(__FILE__), 'railshoster/capify_project_failed_error')
 require File.join(File.dirname(__FILE__), 'railshoster/bad_application_json_hash_error')
 require File.join(File.dirname(__FILE__), 'railshoster/bad_appliction_token_error')
+require File.join(File.dirname(__FILE__), 'railshoster/capistrano/executor')
 require File.join(File.dirname(__FILE__), 'railshoster/init_command')
 require File.join(File.dirname(__FILE__), 'railshoster/deploy_command')
 require File.join(File.dirname(__FILE__), 'railshoster/app_url_command')
+
 
 module Railshoster
 end
