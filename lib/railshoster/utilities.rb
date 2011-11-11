@@ -24,24 +24,36 @@ module Railshoster
       FileUtils.cp(path, backup_path)      
     end
     
-    def self.find_public_ssh_keys                  
-      user = Etc.getlogin  
-      home = get_user_home
-      ssh_dir = File.join(home, ".ssh", "*.pub")
-      files_in_ssh_dir = Dir.glob(ssh_dir)
+    def self.find_public_ssh_keys(ssh_dir =  File.join(get_user_home, ".ssh"))                  
+      files_in_ssh_dir = Dir.glob(File.join(ssh_dir, "*.pub"))
+      
+      ssh_keys = []
+      
       files_in_ssh_dir.each do |filepath|
         filepathname = Pathname.new(filepath)
-        puts filepathname.basename.to_s
+        
+        begin
+          ssh_keys << parse_public_ssh_key_file(filepathname)      
+        rescue InvalidPublicSshKeyError => e
+          puts "\tNotice: #{filepathname} is not a valid public ssh key: #{e.message}"
+        end
       end
+      ssh_keys
+    end  
+    
+    def self.parse_public_ssh_key_file(path_to_key)
+      key = File.open(path_to_key).read
+      key_hash = parse_public_ssh_key(key)
+      key_hash[:path] = path_to_key
+      key_hash
     end
     
-    # Checks whether the given key is valid to be used in a authorized_keys file..
-    def self.verify_public_ssh_key(key)
-      format_identifier, key_data = key.split(" ")
+    def self.parse_public_ssh_key(key)
+      format_identifier, key_data = key.split(" ")   
       raise InvalidPublicSshKeyError.new("Couldn't recognize both format_identifier and/or key_data. One is missing") unless(format_identifier && key_data)
-      
+      {:format => format_identifier.chomp, :key_data => key_data.chomp, :key => key.chomp}
     end
-    
+        
     def self.get_user_home
       homes = ["HOME", "HOMEPATH"]
       home_key = homes.detect { |h| ENV[h] != nil }

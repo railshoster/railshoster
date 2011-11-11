@@ -12,5 +12,5 @@ require 'fakefs/spec_helpers'
 require File.join(File.dirname(__FILE__), '..', 'lib', 'railshoster')
 
 RSpec.configure do |c|
-  c.mock_with :rspec
+  c.mock_with :mocha
 end

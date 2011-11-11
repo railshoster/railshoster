@@ -54,21 +54,30 @@ describe Railshoster::Utilities do
       Railshoster::Utilities.find_public_ssh_keys
     end
     
-    it "should verify a valid ssh public key" do
-      Railshoster::Utilities.verify_public_ssh_key("ssh-dss AAAAB3NzaC1kc3MAAACASb4K1r69pd07CdApimtQvDD6VfKNCxv3BjyApoG4jQrrzhyMbuu1CKlbn7fIP4b18nQw3j02KIihcK/m6eN3pEkdI2+EbfGdpZeyZsxu7T0TgUDdB5+9wBHK46djOcB9n0PvY+uC/wO+nOXLMaL6dTzPOAF88QKr4Y88QMLzyNcAAAAVAIyNiIdszugwRjAefsa+JhGv+DR7AAAAgBonQljDlrI71sryROfA0KCu+wzB2mhou1iJEuFu0X079Urs6vhniT0qNXHMhLHFCxfZTrjbAGM3PY1SjW2XKmPLfyDwWoJrKtB10WZSlGZqSajMHahFdQ0fruibR/jGPI/etWbMSOHNZ2bBrM19LzuxPoZ2yWdigfCTLNl0bct6AAAAgDjakQkN1VfL/qFaAaX9VNS91ztUZo7HW2XuarGQ8GlTANsfWRhJLwXGJXkFaLB3Ja8DFeBLdnNBLKlMBh0MUIxOryrR6ShC5Ul5bmWfzpHq9WyTF6G/qmm7dIOSFJpe5OfAaZitaNjb7dHe6ruryYZ9IuPwuKWwy+BNJih+EEFJ")
-      pending("implement Railshoster::Utilities.verify_public_ssh_key")
+    it "should parse a valid ssh public key" do
+      key = Railshoster::Utilities.parse_public_ssh_key("ssh-dss AAAAB3NzaC1kc3MAAACASb4K1r69pd07CdApimtQvDD6VfKNCxv3BjyApoG4jQrrzhyMbuu1CKlbn7fIP4b18nQw3j02KIihcK/m6eN3pEkdI2+EbfGdpZeyZsxu7T0TgUDdB5+9wBHK46djOcB9n0PvY+uC/wO+nOXLMaL6dTzPOAF88QKr4Y88QMLzyNcAAAAVAIyNiIdszugwRjAefsa+JhGv+DR7AAAAgBonQljDlrI71sryROfA0KCu+wzB2mhou1iJEuFu0X079Urs6vhniT0qNXHMhLHFCxfZTrjbAGM3PY1SjW2XKmPLfyDwWoJrKtB10WZSlGZqSajMHahFdQ0fruibR/jGPI/etWbMSOHNZ2bBrM19LzuxPoZ2yWdigfCTLNl0bct6AAAAgDjakQkN1VfL/qFaAaX9VNS91ztUZo7HW2XuarGQ8GlTANsfWRhJLwXGJXkFaLB3Ja8DFeBLdnNBLKlMBh0MUIxOryrR6ShC5Ul5bmWfzpHq9WyTF6G/qmm7dIOSFJpe5OfAaZitaNjb7dHe6ruryYZ9IuPwuKWwy+BNJih+EEFJ")      
+      key[:format].should eql("ssh-dss")
+      key[:key_data].should eql("AAAAB3NzaC1kc3MAAACASb4K1r69pd07CdApimtQvDD6VfKNCxv3BjyApoG4jQrrzhyMbuu1CKlbn7fIP4b18nQw3j02KIihcK/m6eN3pEkdI2+EbfGdpZeyZsxu7T0TgUDdB5+9wBHK46djOcB9n0PvY+uC/wO+nOXLMaL6dTzPOAF88QKr4Y88QMLzyNcAAAAVAIyNiIdszugwRjAefsa+JhGv+DR7AAAAgBonQljDlrI71sryROfA0KCu+wzB2mhou1iJEuFu0X079Urs6vhniT0qNXHMhLHFCxfZTrjbAGM3PY1SjW2XKmPLfyDwWoJrKtB10WZSlGZqSajMHahFdQ0fruibR/jGPI/etWbMSOHNZ2bBrM19LzuxPoZ2yWdigfCTLNl0bct6AAAAgDjakQkN1VfL/qFaAaX9VNS91ztUZo7HW2XuarGQ8GlTANsfWRhJLwXGJXkFaLB3Ja8DFeBLdnNBLKlMBh0MUIxOryrR6ShC5Ul5bmWfzpHq9WyTF6G/qmm7dIOSFJpe5OfAaZitaNjb7dHe6ruryYZ9IuPwuKWwy+BNJih+EEFJ")
+      key[:key].should eql("ssh-dss AAAAB3NzaC1kc3MAAACASb4K1r69pd07CdApimtQvDD6VfKNCxv3BjyApoG4jQrrzhyMbuu1CKlbn7fIP4b18nQw3j02KIihcK/m6eN3pEkdI2+EbfGdpZeyZsxu7T0TgUDdB5+9wBHK46djOcB9n0PvY+uC/wO+nOXLMaL6dTzPOAF88QKr4Y88QMLzyNcAAAAVAIyNiIdszugwRjAefsa+JhGv+DR7AAAAgBonQljDlrI71sryROfA0KCu+wzB2mhou1iJEuFu0X079Urs6vhniT0qNXHMhLHFCxfZTrjbAGM3PY1SjW2XKmPLfyDwWoJrKtB10WZSlGZqSajMHahFdQ0fruibR/jGPI/etWbMSOHNZ2bBrM19LzuxPoZ2yWdigfCTLNl0bct6AAAAgDjakQkN1VfL/qFaAaX9VNS91ztUZo7HW2XuarGQ8GlTANsfWRhJLwXGJXkFaLB3Ja8DFeBLdnNBLKlMBh0MUIxOryrR6ShC5Ul5bmWfzpHq9WyTF6G/qmm7dIOSFJpe5OfAaZitaNjb7dHe6ruryYZ9IuPwuKWwy+BNJih+EEFJ")
     end
     
-    it "should fail to verify a ssh key without a public key format identifier" do
+    it "should fail to parse a ssh key without a public key format identifier" do
       expect {
-        Railshoster::Utilities.verify_public_ssh_key("AAAAB3NzaC1kc3MAAACASb4K1r69pd07CdApimtQvDD6VfKNCxv3BjyApoG4jQrrzhyMbuu1CKlbn7fIP4b18nQw3j02KIihcK/m6eN3pEkdI2+EbfGdpZeyZsxu7T0TgUDdB5+9wBHK46djOcB9n0PvY+uC/wO+nOXLMaL6dTzPOAF88QKr4Y88QMLzyNcAAAAVAIyNiIdszugwRjAefsa+JhGv+DR7AAAAgBonQljDlrI71sryROfA0KCu+wzB2mhou1iJEuFu0X079Urs6vhniT0qNXHMhLHFCxfZTrjbAGM3PY1SjW2XKmPLfyDwWoJrKtB10WZSlGZqSajMHahFdQ0fruibR/jGPI/etWbMSOHNZ2bBrM19LzuxPoZ2yWdigfCTLNl0bct6AAAAgDjakQkN1VfL/qFaAaX9VNS91ztUZo7HW2XuarGQ8GlTANsfWRhJLwXGJXkFaLB3Ja8DFeBLdnNBLKlMBh0MUIxOryrR6ShC5Ul5bmWfzpHq9WyTF6G/qmm7dIOSFJpe5OfAaZitaNjb7dHe6ruryYZ9IuPwuKWwy+BNJih+EEFJ")
+        Railshoster::Utilities.parse_public_ssh_key("AAAAB3NzaC1kc3MAAACASb4K1r69pd07CdApimtQvDD6VfKNCxv3BjyApoG4jQrrzhyMbuu1CKlbn7fIP4b18nQw3j02KIihcK/m6eN3pEkdI2+EbfGdpZeyZsxu7T0TgUDdB5+9wBHK46djOcB9n0PvY+uC/wO+nOXLMaL6dTzPOAF88QKr4Y88QMLzyNcAAAAVAIyNiIdszugwRjAefsa+JhGv+DR7AAAAgBonQljDlrI71sryROfA0KCu+wzB2mhou1iJEuFu0X079Urs6vhniT0qNXHMhLHFCxfZTrjbAGM3PY1SjW2XKmPLfyDwWoJrKtB10WZSlGZqSajMHahFdQ0fruibR/jGPI/etWbMSOHNZ2bBrM19LzuxPoZ2yWdigfCTLNl0bct6AAAAgDjakQkN1VfL/qFaAaX9VNS91ztUZo7HW2XuarGQ8GlTANsfWRhJLwXGJXkFaLB3Ja8DFeBLdnNBLKlMBh0MUIxOryrR6ShC5Ul5bmWfzpHq9WyTF6G/qmm7dIOSFJpe5OfAaZitaNjb7dHe6ruryYZ9IuPwuKWwy+BNJih+EEFJ")
       }.to raise_error(Railshoster::InvalidPublicSshKeyError)
     end
     
-    it "should fail to verify a ssh key without a public key/certificate data" do
+    it "should fail to parse a ssh key without a public key/certificate data" do
       expect {
-        Railshoster::Utilities.verify_public_ssh_key("ssh-dss ")
+        Railshoster::Utilities.parse_public_ssh_key("ssh-dss ")
       }.to raise_error(Railshoster::InvalidPublicSshKeyError)
+    end
+    
+    it "should parse a public ssh key file" do      
+      keys = Railshoster::Utilities.find_public_ssh_keys(File.join(File.dirname(__FILE__), "..", "..", "fake_dot_ssh"))
+      keys.size.should be(1)
+      keys.first[:format].should eql("ssh-rsa")
+      keys.first[:key_data].should eql("AAAAB3NzaC1yc2EAAAADAQABAAABAQDwnMABQ9xWwYdhHaaoNSzFMfXmytWHgkBmDg6v8Fn3oILqOMs99IPd7ChPetDdUWYV2pzLVVKB/kwrcoodRC4H6YHn8xk1oI+gDsv4Yg7ytWwgnDf5zXwWMVQ/IqfOdfxRwS1UCrKL7UsVfIUPzXmkia7PoMoQNnM8jbDRDcfyis3Q1VZ9OjIlM/RfqjH0hGFS95nd6geNwpSbSpg4HxNmfltQ6GpoqclQXX0QdBO+q93sn33JjFPEhYuLvQcoea7Tl0zRY0AGQ9r7562QFlWqMmB+9YXcsZu2OZSk7t5a39jral0jEuEeJB56kb5ZUqRA1DJI5En09/WUPLCYprdb")
     end
   end  
 end
