@@ -86,9 +86,7 @@ module Railshoster
       deployrb_path = File.join(deployrb_basepath, "deploy.rb")
       Railshoster::Utilities.backup_file(deployrb_path) if File.exists?(deployrb_path)
       
-      File.open(deployrb_path, "w+") do |f|
-        f << deployrb_str
-      end
+      File.open(deployrb_path, "w+") { |f| f << deployrb_str }
     end      
     
     def capify_project      
