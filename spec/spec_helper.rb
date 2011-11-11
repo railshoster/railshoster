@@ -1,4 +1,5 @@
 require 'rspec'
+
 require 'fakefs/safe'
 require 'fakefs/spec_helpers'
 
@@ -10,6 +11,6 @@ require 'fakefs/spec_helpers'
 
 require File.join(File.dirname(__FILE__), '..', 'lib', 'railshoster')
 
-#RSpec.configure do |c|
-#  c.mock_with :rspec
-#end
+RSpec.configure do |c|
+  c.mock_with :rspec
+end

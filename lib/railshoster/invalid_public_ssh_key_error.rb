@@ -1,5 +1,5 @@
 module Railshoster
-  class PossiblyNotAGitRepoError < ArgumentError
+  class InvalidPublicSshKeyError < ArgumentError
     include Railshoster::Error
   end
 end

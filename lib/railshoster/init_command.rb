@@ -31,9 +31,19 @@ module Railshoster
     def run_by_application_hash(application_hash_as_json_string)
       app_hash = parse_application_json_hash(application_hash_as_json_string)
       
+      # Extract GIT URL from project and add it to the app_hash
       git_url = get_git_remote_url_from_git_config          
       app_hash["git"] = git_url
 
+      deployrb_str = create_deployrb(app_hash)      
+      write_deploy_rb(deployrb_str)
+      capify_project
+      success_message
+    end
+    
+    protected    
+    
+    def create_deployrb(app_hash)
       deployrb_str = ""
       
       # Choose the further process depending on the application type by applying a strategy pattern.
@@ -46,13 +56,7 @@ module Railshoster
         else
           raise UnsupportedApplicationTypeError.new
       end
-      
-      write_deploy_rb(deployrb_str)
-      capify_project
-      success_message
-    end
-    
-    protected
+    end    
     
     # Decodoes token to get the JSON hash back.
     # gQkUSMakKRPhm0EIaer => {"key":"value"}

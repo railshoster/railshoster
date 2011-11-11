@@ -16,6 +16,6 @@ h3. Product Backlog
 
 h3. General TODOs
 
-* Railshoster::InitCommand - Check wether it is possible to replace "system" call with a pure ruby version possibly by using the capistrano gem directly via ruby.
+* Railshoster::InitCommand - Check wether it is possible to replace "system" call with a pure ruby version possibly by using the capistrano gem directly via ruby. See branch "run_cap_task_from_ruby-2011-11-08" for a try on how to do it.
 * Test bin/railshoster
 * railshoster deploy should check capistrano's exit status and respond to that in case of a failure.

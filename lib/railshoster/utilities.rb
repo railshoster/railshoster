@@ -1,4 +1,6 @@
 require 'fileutils'
+require 'etc'
+require 'pathname'
 
 module Railshoster
   class Utilities
@@ -20,6 +22,30 @@ module Railshoster
       end
       
       FileUtils.cp(path, backup_path)      
+    end
+    
+    def self.find_public_ssh_keys                  
+      user = Etc.getlogin  
+      home = get_user_home
+      ssh_dir = File.join(home, ".ssh", "*.pub")
+      files_in_ssh_dir = Dir.glob(ssh_dir)
+      files_in_ssh_dir.each do |filepath|
+        filepathname = Pathname.new(filepath)
+        puts filepathname.basename.to_s
+      end
+    end
+    
+    # Checks whether the given key is valid to be used in a authorized_keys file..
+    def self.verify_public_ssh_key(key)
+      format_identifier, key_data = key.split(" ")
+      raise InvalidPublicSshKeyError.new("Couldn't recognize both format_identifier and/or key_data. One is missing") unless(format_identifier && key_data)
+      
+    end
+    
+    def self.get_user_home
+      homes = ["HOME", "HOMEPATH"]
+      home_key = homes.detect { |h| ENV[h] != nil }
+      ENV[home_key]
     end
   end
 end
