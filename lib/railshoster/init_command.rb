@@ -2,6 +2,7 @@ require 'base64'
 require 'json'
 require 'git'
 require 'fileutils'
+require 'net/sftp'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '/capistrano/h'))
 
@@ -35,6 +36,8 @@ module Railshoster
       git_url = get_git_remote_url_from_git_config          
       app_hash["git"] = git_url
 
+      #TODO Add connection test -> If there's already access -> no need to do this
+      generate_remote_authorized_keys_file(app_hash)
       deployrb_str = create_deployrb(app_hash)      
       write_deploy_rb(deployrb_str)
       capify_project
@@ -43,9 +46,26 @@ module Railshoster
     
     protected
     
-    def generate_authorized_keys_file
-      raise "unimplemented"
-    end        
+    def generate_remote_authorized_keys_file(app_hash)
+      key = Railshoster::Utilities.select_public_ssh_key  
+      create_remote_authorized_key_file_from_public_ssh_key(app_hash, key)      
+
+      #TODO Add connection test -> See whether this has worked out as expected.
+    end
+    
+    def create_remote_authorized_key_file_from_public_ssh_key(app_hash, key)
+      remote_dot_ssh_path = ".ssh"
+      remote_authorized_keys_path = remote_dot_ssh_path + "/authorized_keys"
+      Net::SFTP.start(app_hash["h"], app_hash["u"], :password => app_hash["p"]) do |sftp|                
+        begin
+          sftp.mkdir!(remote_dot_ssh_path)
+        rescue Net::SFTP::StatusException => e
+          # Most likely the .ssh folder already exists raise again if not.
+          raise e unless e.code == 4
+        end
+        sftp.upload!(key[:path].to_s, remote_authorized_keys_path)
+      end      
+    end          
     
     def create_deployrb(app_hash)
       deployrb_str = ""

@@ -24,6 +24,12 @@ module Railshoster
       FileUtils.cp(path, backup_path)      
     end
     
+    def self.get_user_home
+      homes = ["HOME", "HOMEPATH"]
+      home_key = homes.detect { |h| ENV[h] != nil }
+      ENV[home_key]
+    end    
+    
     def self.select_public_ssh_key(ssh_dir =  File.join(get_user_home, ".ssh"), options = {:verbose => true})
       keys = Railshoster::Utilities.find_public_ssh_keys(ssh_dir, options)
       return keys.first if keys.size == 1
@@ -72,12 +78,6 @@ module Railshoster
       format_identifier, key_data = key.split(" ")   
       raise InvalidPublicSshKeyError.new("Couldn't recognize both format_identifier and/or key_data. One is missing") unless(format_identifier && key_data)
       {:format => format_identifier.chomp, :key_data => key_data.chomp, :key => key.chomp}
-    end
-        
-    def self.get_user_home
-      homes = ["HOME", "HOMEPATH"]
-      home_key = homes.detect { |h| ENV[h] != nil }
-      ENV[home_key]
     end
   end
 end
