@@ -11,4 +11,5 @@ gem 'erubis'
 group :test do
   gem 'rspec'
   gem 'fakefs'
+  gem 'mocha'
 end
