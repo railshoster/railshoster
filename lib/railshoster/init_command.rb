@@ -41,7 +41,13 @@ module Railshoster
       success_message
     end
     
-    protected    
+    protected
+    
+    def generate_authorized_keys_file
+      
+    end
+    
+    
     
     def create_deployrb(app_hash)
       deployrb_str = ""

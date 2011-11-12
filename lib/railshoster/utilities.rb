@@ -24,7 +24,24 @@ module Railshoster
       FileUtils.cp(path, backup_path)      
     end
     
-    def self.find_public_ssh_keys(ssh_dir =  File.join(get_user_home, ".ssh"))                  
+    def self.select_public_ssh_key(ssh_dir =  File.join(get_user_home, ".ssh"), options = {:verbose => true})
+      keys = Railshoster::Utilities.find_public_ssh_keys(ssh_dir, options)
+      if keys.size == 1 then
+        selected_key = keys.first 
+      else
+        puts "\nThere are multiple public ssh keys. Please choose your deploy key:"
+        keys.each_with_index do |key, i|
+          puts "#{i+1}) #{Pathname.new(key[:path]).basename.to_s}"
+        end
+        print "Your choice: "
+        index = (STDIN.gets.chomp.to_i - 1)
+        puts index
+        selected_key = keys[index]
+      end
+      selected_key
+    end
+    
+    def self.find_public_ssh_keys(ssh_dir =  File.join(get_user_home, ".ssh"), options = {:verbose => true})                  
       files_in_ssh_dir = Dir.glob(File.join(ssh_dir, "*.pub"))
       
       ssh_keys = []
@@ -35,7 +52,7 @@ module Railshoster
         begin
           ssh_keys << parse_public_ssh_key_file(filepathname)      
         rescue InvalidPublicSshKeyError => e
-          puts "\tNotice: #{filepathname} is not a valid public ssh key: #{e.message}"
+          puts "\tNotice: #{filepathname} is not a valid public ssh key: #{e.message}" if (options && options[:verbose])
         end
       end
       ssh_keys
