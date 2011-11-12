@@ -15,6 +15,7 @@ This is what you need on your client to run the RailsHoster gem to deploy your a
 * Shell (e.g. Bash)
 * SSH Shell
 * Git
+* Currently the gem assumes bundler to be used. Let us know if this is a problem for you.
 
 h2. Installation
 
