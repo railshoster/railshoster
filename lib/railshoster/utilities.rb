@@ -33,10 +33,13 @@ module Railshoster
         keys.each_with_index do |key, i|
           puts "#{i+1}) #{Pathname.new(key[:path]).basename.to_s}"
         end
-        print "Your choice: "
-        index = (STDIN.gets.chomp.to_i - 1)
-        puts index
-        selected_key = keys[index]
+        
+        while selected_key.nil? do
+          print "Your choice: "
+          index = (STDIN.gets.chomp.to_i - 1)
+          selected_key = keys[index]
+          puts "Invalid choice!" unless selected_key
+        end
       end
       selected_key
     end
