@@ -44,10 +44,8 @@ module Railshoster
     protected
     
     def generate_authorized_keys_file
-      
-    end
-    
-    
+      raise "unimplemented"
+    end        
     
     def create_deployrb(app_hash)
       deployrb_str = ""

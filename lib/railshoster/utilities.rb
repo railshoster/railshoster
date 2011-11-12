@@ -26,21 +26,21 @@ module Railshoster
     
     def self.select_public_ssh_key(ssh_dir =  File.join(get_user_home, ".ssh"), options = {:verbose => true})
       keys = Railshoster::Utilities.find_public_ssh_keys(ssh_dir, options)
-      if keys.size == 1 then
-        selected_key = keys.first 
-      else
-        puts "\nThere are multiple public ssh keys. Please choose your deploy key:"
-        keys.each_with_index do |key, i|
-          puts "#{i+1}) #{Pathname.new(key[:path]).basename.to_s}"
-        end
-        
-        while selected_key.nil? do
-          print "Your choice: "
-          index = (STDIN.gets.chomp.to_i - 1)
-          selected_key = keys[index]
-          puts "Invalid choice!" unless selected_key
-        end
+      return keys.first if keys.size == 1
+
+      puts "\nThere are multiple public ssh keys. Please choose your deploy key:"
+      keys.each_with_index do |key, i|
+        puts "#{i+1}) #{Pathname.new(key[:path]).basename.to_s}"
       end
+      
+      selected_key = nil
+      while selected_key.nil? do
+        print "Your choice: "
+        index = (STDIN.gets.chomp.to_i - 1)
+        selected_key = keys[index]
+        puts "Invalid choice!" unless selected_key
+      end
+
       selected_key
     end
     
