@@ -37,7 +37,10 @@ module Railshoster
       app_hash["git"] = git_url
 
       #TODO Add connection test -> If there's already access -> no need to do this
-      generate_remote_authorized_keys_file(app_hash)
+      selected_key = Railshoster::Utilities.select_public_ssh_key  
+      app_hash["public_ssh_key"] = Pathname.new(selected_key[:path]).basename.to_s.gsub(".pub", "")
+      
+      create_remote_authorized_key_file_from_public_ssh_key(app_hash, selected_key)
       deployrb_str = create_deployrb(app_hash)      
       write_deploy_rb(deployrb_str)
       capify_project
@@ -45,13 +48,6 @@ module Railshoster
     end
     
     protected
-    
-    def generate_remote_authorized_keys_file(app_hash)
-      key = Railshoster::Utilities.select_public_ssh_key  
-      create_remote_authorized_key_file_from_public_ssh_key(app_hash, key)      
-
-      #TODO Add connection test -> See whether this has worked out as expected.
-    end
     
     def create_remote_authorized_key_file_from_public_ssh_key(app_hash, key)
       remote_dot_ssh_path = ".ssh"

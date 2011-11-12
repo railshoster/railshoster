@@ -22,6 +22,10 @@ set :password, "<%= app["p"] %>"
 # allow SSH-Key-Forwarding
 set :ssh_options, { :forward_agent => true }
 
+<% if app["public_ssh_key"] then %>
+ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "<%= app["public_ssh_key"] %>")]
+<% end %>
+
 ## Application name and repository
 
 # application name ( should be rails1 rails2 rails3 ... )
