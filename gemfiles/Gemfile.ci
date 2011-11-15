@@ -7,6 +7,7 @@ gem "gli", ">= 1.2.5"
 gem "json"
 gem "git"
 gem 'erubis'
+gem 'sane'
 
 group :test do
   gem 'rspec'

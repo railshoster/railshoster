@@ -9,6 +9,7 @@ require 'fakefs/spec_helpers'
 #  include FakeFS::SpecHelpers
 # end
 
+require File.join(File.dirname(__FILE__), '..', 'lib', 'init')
 require File.join(File.dirname(__FILE__), '..', 'lib', 'railshoster')
 
 RSpec.configure do |c|

@@ -3,6 +3,7 @@ require 'json'
 require 'git'
 require 'fileutils'
 require 'net/sftp'
+require 'sane'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '/capistrano/h'))
 
@@ -11,10 +12,6 @@ module Railshoster
   # This action class helps to setup a new rails applicaton
   class InitCommand < Command        
     
-    def initialize(project_dir)
-      super(project_dir)
-    end
-        
     def run_by_application_token(application_token) 
       decoded_token = decode_token(application_token)
       
@@ -30,6 +27,8 @@ module Railshoster
     end
     
     def run_by_application_hash(application_hash_as_json_string)
+      check_system_requirements
+      check_project_requirements
       app_hash = parse_application_json_hash(application_hash_as_json_string)
       
       # Extract GIT URL from project and add it to the app_hash
@@ -48,6 +47,35 @@ module Railshoster
     end
     
     protected
+    
+    def check_system_requirements
+      check_os
+    end
+    
+    def check_project_requirements
+      #TOOD implement  
+      # check_git
+      
+      check_gemfile
+    end
+    
+    def check_gemfile
+      gem_file = File.join(@project_dir, "Gemfile")
+      unless File.exists?(gem_file) then
+        puts "\nWarning: Your project does not seem to have a Gemfile. Please ensure your are using bundler."
+        exit_now!("Initialization aborted. No Gemfile found.", -1)
+      end
+    end
+    
+    def check_os
+      if OS.windows? then
+        puts "\nWarning: This software requires a Unix/Linux/BSD OS. Do you really want to proceed?"
+        decision = STDIN.gets.chomp
+        unless %w(y Y).include?(decision) then
+          exit_now!("Initialization aborted. Bad operating system.", -1)
+        end              
+      end
+    end
     
     def create_remote_authorized_key_file_from_public_ssh_key(app_hash, key)
       remote_dot_ssh_path = ".ssh"
