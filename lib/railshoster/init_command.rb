@@ -106,7 +106,7 @@ module Railshoster
     def create_remote_authorized_key_file(host, ssh_username, password, key, remote_dot_ssh_path = ".ssh", target_username = nil)
       remote_authorized_keys_path = remote_dot_ssh_path + "/authorized_keys"
       Net::SFTP.start(host, ssh_username, :password => password) do |sftp|                
-        
+
         #TODO Smarter way to determine home directory
         stats = sftp.stat!("/home/#{target_username}") if target_username
         

@@ -9,7 +9,9 @@ h2. 1.0.0
 
 h3. Product Backlog
 
-* Mailer-Configuration
+* Check capistrano return status when deploying with railshoster deploy.
+* Mailer configuration - for railshoter shared hosting
+* Mailer configuration - for railshoster vps
 * Multistage Deployments - Deploy an app to a shared hosting (e.g. dev) and to a VPS (production).
 
 h3. General TODOs

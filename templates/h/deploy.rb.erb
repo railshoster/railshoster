@@ -50,7 +50,12 @@ default_run_options[:pty] = true
 set :use_sudo, false
 
 # set the location where to deploy the new project
+
+<% if app["t"].eql?("h") then %>
 set :deploy_to, "/home/#{user}/#{application}"
+<% else %>
+set :deploy_to, "/var/www/#{user}"
+<% end %>
 
 # live
 role :app, "<%= app["h"]%>"
