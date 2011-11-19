@@ -4,7 +4,7 @@ module Railshoster
   module Capistrano
     
     # Strategy to generate a capistrano config for a shared hosting
-    class H
+    class Config
       
       #### Static
       

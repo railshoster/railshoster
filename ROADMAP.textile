@@ -5,12 +5,10 @@ h2. 0.0.1
 
 h2. 1.0.0
 
-* Remove password from deploy.rb by using an ssh connect at init. Find and copy lokal ssh public key to remot/authorized_keys.
 * Solve database.yml issue - mysql or mysql2. Decide using bundler?
 
 h3. Product Backlog
 
-* RailsHoster VPS Deployments
 * Mailer-Configuration
 * Multistage Deployments - Deploy an app to a shared hosting (e.g. dev) and to a VPS (production).
 

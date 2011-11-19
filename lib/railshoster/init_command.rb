@@ -5,7 +5,7 @@ require 'fileutils'
 require 'net/sftp'
 require 'sane'
 
-require File.expand_path(File.join(File.dirname(__FILE__), '/capistrano/h'))
+require File.expand_path(File.join(File.dirname(__FILE__), '/capistrano/config'))
 
 module Railshoster
   
@@ -38,8 +38,8 @@ module Railshoster
       #TODO Add connection test -> If there's already access -> no need to do this
       selected_key = Railshoster::Utilities.select_public_ssh_key  
       app_hash["public_ssh_key"] = Pathname.new(selected_key[:path]).basename.to_s.gsub(".pub", "")
-      
-      create_remote_authorized_key_file_from_public_ssh_key(app_hash, selected_key)
+          
+      create_remote_authorized_key_file_from_app_hash(app_hash, selected_key)      
       deployrb_str = create_deployrb(app_hash)      
       write_deploy_rb(deployrb_str)
       capify_project
@@ -77,30 +77,59 @@ module Railshoster
       end
     end
     
-    def create_remote_authorized_key_file_from_public_ssh_key(app_hash, key)
-      remote_dot_ssh_path = ".ssh"
+    def create_remote_authorized_key_file_from_app_hash(app_hash, key)
+      if app_hash["t"].eql?("h") then
+        
+        # For a hosting package the password is the deploy user's password
+        create_remote_authorized_key_file(app_hash["h"], app_hash["u"], app_hash["p"], key)
+      elsif app_hash["t"].eql?("v") then
+        
+        # For a vps the given password it the root user's password -> Register key for root user
+        create_remote_authorized_key_file(app_hash["h"], "root", app_hash["p"], key)        
+        
+        # Also register the public key to enable key access to the deploy user
+        # This means that the
+        create_remote_authorized_key_file(app_hash["h"], "root", app_hash["p"], key, "/home/#{app_hash['u']}/.ssh", app_hash['u'])        
+      else
+        exit_now!("Initialization aborted. Invalid product type: #{app_hash['t']}.", -1)
+      end            
+    end     
+    
+    # Creates a remote authorized keys file for the given public key
+    #
+    # === Parameters
+    # +host+:: SSH host to connect to
+    # +password+:: SSH password
+    # +key+:: Public key hash. Have a look at +Railshoster::Utilities.select_public_ssh_key+ for more details about the key structure.
+    # +remote_dot_ssh_path+:: Remote path to the user's .ssh path. Usually this is relative to the ssh-users's home path. Use absolute path names to avoid that.
+    # +target_username+:: Optional. If this parameter is set .ssh directory and the authorized_keys file will be assegned to the user with the given username.
+    def create_remote_authorized_key_file(host, ssh_username, password, key, remote_dot_ssh_path = ".ssh", target_username = nil)
       remote_authorized_keys_path = remote_dot_ssh_path + "/authorized_keys"
-      Net::SFTP.start(app_hash["h"], app_hash["u"], :password => app_hash["p"]) do |sftp|                
+      Net::SFTP.start(host, ssh_username, :password => password) do |sftp|                
+        
+        #TODO Smarter way to determine home directory
+        stats = sftp.stat!("/home/#{target_username}") if target_username
+        
         begin
           sftp.mkdir!(remote_dot_ssh_path)
+          sftp.setstat(remote_dot_ssh_path, :uid => stats.uid, :gid => stats.gid) if target_username
         rescue Net::SFTP::StatusException => e
           # Most likely the .ssh folder already exists raise again if not.
           raise e unless e.code == 4
         end
         sftp.upload!(key[:path].to_s, remote_authorized_keys_path)
+        sftp.setstat(remote_authorized_keys_path, :uid => stats.uid, :gid => stats.gid) if target_username 
       end      
-    end          
+    end     
     
     def create_deployrb(app_hash)
       deployrb_str = ""
       
       # Choose the further process depending on the application type by applying a strategy pattern.
       case app_hash["t"].to_sym
-        when :h
+        when :h, :v
           # Shared Hosting Deployments
-          deployrb_str = Railshoster::Capistrano::H.render_deploy_rb_to_s(app_hash)
-        # Later also support VPS Deployments
-        # when :v
+          deployrb_str = Railshoster::Capistrano::Config.render_deploy_rb_to_s(app_hash)        
         else
           raise UnsupportedApplicationTypeError.new
       end

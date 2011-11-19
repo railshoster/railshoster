@@ -19,7 +19,7 @@ h3. 0.0.3
 * Enhanced error messages for invalid application tokens.
 * Initial README.
 
-h3. 0.4.0
+h3. 0.0.4
 
 * 0.4.0 has become 0.1.0 since features have been added.
 
@@ -50,3 +50,7 @@ h3. 0.2.1
 h3. 0.3.0
 
 * SSH publick key file recognition and upload to authorized_keys to enable a passwordless deploy.rb.
+
+h3. 0.4.0
+
+* Now also works for RailsHoster VPS (virtual Servers).

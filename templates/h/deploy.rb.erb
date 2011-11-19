@@ -79,7 +79,12 @@ namespace :railshoster do
   desc "Show the url of your app."
   task :appurl do
     puts "\nThe default RailsHoster.com URL of your app is:"
-    puts "\nhttp://#{user}-<%= app["aid"] %>.<%= app["h"]%>"    
+    
+    <% if app["t"].eql?("h") then %>
+      puts "\nhttp://#{user}-<%= app["aid"] %>.<%= app["h"]%>"    
+    <% else %>
+      puts "\nhttp://#{user}.<%= app["h"]%>"    
+    <% end %>
     puts "\n"
   end
 end
