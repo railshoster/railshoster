@@ -63,3 +63,5 @@ h3. 0.6.0
 
 * Splited up init_command into several helper modules to keep the InitCommand classes' main workflow clear and obvious.
 * Analysis of Gemfile.lock to determine your database adapter to modify database.yml.
+* Refactored product specific settings. 
+* Moved from deploy.rb.yml into init_comand. added database.yml update via sftp
