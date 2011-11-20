@@ -3,22 +3,27 @@ require 'json'
 require 'git'
 require 'fileutils'
 require 'net/sftp'
-require 'sane'
 require 'bundler'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '/capistrano/config'))
 require File.expand_path(File.join(File.dirname(__FILE__), '/init_ssh_helpers'))
 require File.expand_path(File.join(File.dirname(__FILE__), '/init_capistrano_helpers'))
 require File.expand_path(File.join(File.dirname(__FILE__), '/init_validation_helpers'))
+require File.expand_path(File.join(File.dirname(__FILE__), '/init_gem_helpers'))
 
 module Railshoster
   
   # This action class helps to setup a new rails applicaton
+  #
+  # == Design Contraints
+  # * The workflow of this class should be easy to read. Hence helper methods are sourced out to helper modules.
+  # * All modifications of the @app_hash must be done within this file not in a helper module. This helps to easily grasp the app_hash structure with all changed made to it.
   class InitCommand < Command        
     
     include Railshoster::InitSshHelpers
     include Railshoster::InitCapistranoHelpers
-    include Railshoster::InitValidationHelpers
+    include Railshoster::InitGemHelpers
+    include Railshoster::InitValidationHelpers    
     
     def initialize(project_dir, application_hash_as_json_string)
       super(project_dir)    
@@ -28,7 +33,7 @@ module Railshoster
     #### Instance Methods
     def start
       check_system_requirements
-      check_project_requirements
+      check_project_requirements      
       @app_hash = parse_application_json_hash(@application_hash_as_json_string)
       run_by_application_hash
     end
@@ -53,8 +58,11 @@ module Railshoster
     
     protected
     
-    def run_by_application_hash
+    def run_by_application_hash      
       
+      # e.g. mysql2
+      @app_hash["db_gem"] = get_db_gem
+            
       # Extract GIT URL from project and add it to the app_hash
       git_url = get_git_remote_url_from_git_config          
       @app_hash["git"] = git_url
