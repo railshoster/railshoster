@@ -2,6 +2,16 @@ require File.join(File.dirname(__FILE__), "..", "..", "spec_helper")
 
 describe Railshoster::Command do
   describe "#Basics" do
+    
+    before do
+      git_dir = File.join(File.dirname(__FILE__), "..", "..", "..")    
+      @init = Railshoster::Command.new(git_dir)
+    end
+    
+    it "should read the git repo url" do
+      @init.send(:get_git_remote_url_from_git_config).should =~ /railshoster/
+    end
+    
     it "should instanciate a Command instance also initializing the project git repo" do
 
       # We use the gem's dir as this should be a valid git repo

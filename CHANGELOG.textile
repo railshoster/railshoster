@@ -58,3 +58,8 @@ h3. 0.5.0
 h3. 0.5.1
 
 * Bugfix in deploy.rb.
+
+h3. 0.6.0
+
+* Splited up init_command into several helper modules to keep the InitCommand classes' main workflow clear and obvious.
+* Analysis of Gemfile.lock to determine your database adapter to modify database.yml.

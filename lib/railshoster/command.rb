@@ -15,6 +15,12 @@ module Railshoster
     
     protected
     
+    def get_git_remote_url_from_git_config
+      
+      #TODO Error management: what if there is not remote url (local repo)?
+      @git.config['remote.origin.url']
+    end    
+    
     def capfile_exists?
       File.exists?(capfile_path)
     end

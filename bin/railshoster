@@ -35,12 +35,13 @@ command [:init] do |c|
     ask_for_project_dir(cwd) if args.empty?        
     project_git_dir_name = args[0] || cwd
         
-    init_command = Railshoster::InitCommand.new(project_git_dir_name)
+    
+    
     
     if options[:a] then
-      init_command.run_by_application_token(options[:a])    
+      Railshoster::InitCommand.run_by_application_token(project_git_dir_name, options[:a])    
     elsif options[:j] then
-      init_command.run_by_application_hash(options[:j])    
+      Railshoster::InitCommand.new(project_git_dir_name, options[:j]).start
     else
       raise "Illegal State."
     end

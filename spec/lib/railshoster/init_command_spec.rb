@@ -4,14 +4,11 @@ describe Railshoster::InitCommand do
   
   before do
     # We use the gem's dir as this should be a valid git repo
-    git_dir = File.join(File.dirname(__FILE__), "..", "..", "..")    
-    @init = Railshoster::InitCommand.new(git_dir)
+    @git_dir = File.join(File.dirname(__FILE__), "..", "..", "..")    
+    # @init = Railshoster::InitCommand.new(@git_dir, '{"t":"v","u":"rails1","a":"rails1","aid":1, "h":"server1717.railsvserver.de","p":"xxx"}')
   end
   
-  describe "#Git" do 
-    it "should read the git repo url" do
-      @init.send(:get_git_remote_url_from_git_config).should =~ /railshoster/
-    end
+  describe "#Git" do     
     
     #TODO
     it "should do sth useful if the given project dir has no remote url" do
@@ -33,7 +30,8 @@ describe Railshoster::InitCommand do
     end
     
     it "should raise an BadApplicationJSONHashError error for an invalid incoming JSON hash" do      
-      expect { @init.send(:parse_application_json_hash, "") }.to raise_error(Railshoster::BadApplicationJSONHashError)
+      @init = Railshoster::InitCommand.new(@git_dir, '')
+      expect { @init.send(:parse_application_json_hash, '') }.to raise_error(Railshoster::BadApplicationJSONHashError)
     end
   end
   
@@ -43,7 +41,7 @@ describe Railshoster::InitCommand do
     end
     
     it "should raise an BadApplicationTokenError error for an invalid incoming application token" do      
-      expect { @init.send(:run_by_application_token, "abab") }.to raise_error(Railshoster::BadApplicationTokenError)
+      expect { Railshoster::InitCommand.run_by_application_token(@git_dir, "abab") }.to raise_error(Railshoster::BadApplicationTokenError)
     end
   end
 end
