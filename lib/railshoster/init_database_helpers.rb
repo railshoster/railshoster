@@ -9,11 +9,6 @@ module Railshoster
     
     protected
     
-    def xy
-      dbyml_str = get_database_yml(@app_hash["h"], @app_hash["u"], @app_hash["remote_db_yml"])
-      updated_dbyml_str = update_database_yml_adapters(dbyml_str)
-    end
-    
     def update_database_yml_adapters(dbyml_str)      
       dbyml = YAML.load(dbyml_str)      
       db_adapter = DB_GEM_TO_DB_ADAPTER[@app_hash["db_gem"].downcase]
@@ -25,6 +20,7 @@ module Railshoster
       YAML.dump(dbyml)
     end    
     
+    # Receive a database.yml
     def get_database_yml(host, ssh_username, path_to_dbyml)
       Net::SFTP.start(host, ssh_username) do |sftp|                
         sftp.file.open(path_to_dbyml) do |file|
@@ -32,6 +28,19 @@ module Railshoster
         end
       end
       dbyml
-    end    
+    end  
+    
+    # Receive and update a database.yml
+    def update_database_yml_db_adapters(host, ssh_username, path_to_dbyml)
+      dbyml = ""
+      Net::SFTP.start(host, ssh_username) do |sftp|                
+        sftp.file.open(path_to_dbyml) do |file|
+          dbyml = file.read
+        end
+        sftp.file.open(path_to_dbyml, "w+") do |file|
+          file.write(update_database_yml_adapters(dbyml))
+        end
+      end
+    end
   end
 end
