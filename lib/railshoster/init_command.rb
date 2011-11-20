@@ -63,7 +63,7 @@ module Railshoster
     def process_application_hash      
       expand_app_hash_product_specifically
       # e.g. mysql2
-      @app_hash["db_gem"] = get_db_gem
+      @app_hash["db_gem"] = get_db_gem.name
             
       # Extract GIT URL from project and add it to the app_hash
       git_url = get_git_remote_url_from_git_config          
@@ -86,7 +86,7 @@ module Railshoster
     
     # Add values ot app_hash specific to the given product type.
     def expand_app_hash_product_specifically            
-      case app_hash["t"].to_sym
+      case @app_hash["t"].to_sym
         when :h
           @app_hash["deploy_to"]      = "/home/#{@app_hash['u']}/#{@app_hash['a']}"
           @app_hash["app_url"]        = "http://#{@app_hash['u']}-#{@app_hash['aid']}.#{@app_hash['h']}"

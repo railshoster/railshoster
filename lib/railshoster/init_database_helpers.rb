@@ -29,6 +29,7 @@ module Railshoster
     # Takes a yml string, replaces the db adapters and produces yml again.
     def update_database_yml_db_adapters_in_yml(dbyml_str)      
       dbyml = YAML.load(dbyml_str)      
+      
       db_adapter = DB_GEM_TO_DB_ADAPTER[@app_hash["db_gem"].downcase]
       
       %w(production development).each do |env|
