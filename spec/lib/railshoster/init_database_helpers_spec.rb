@@ -22,12 +22,12 @@ describe Railshoster::InitDatabaseHelpers do
     
     it "should read and update a remote database.yml" do
       pending("mock sftp")
-      @my.send(:update_database_yml_db_adapters, "server1717.railsvserver.de", "rails1", "/var/www/rails1/shared/config/database.yml")
+      @my.send(:update_database_yml_db_adapters_via_ssh, "server1717.railsvserver.de", "rails1", "/var/www/rails1/shared/config/database.yml")
     end
     
     it "should updatea a database.yml" do
       mysql_database_yml = File.open(File.join(File.dirname(__FILE__), "..", "..", "fakefs", "database_yml", "database.mysql.yml")).read
-      @my.send(:update_database_yml_adapters, mysql_database_yml).should eql("--- \nproduction: \n  username: rails1\n  adapter: mysql2\n  database: rails1\n  password: Nut4KBvOqHJ5\n  socket: /var/run/mysqld/mysqld.sock\ndevelopment: \n  username: rails1\n  adapter: mysql2\n  database: rails1_development\n  password: Nut4KBvOqHJ5\n  socket: /var/run/mysqld/mysqld.sock\n")
+      @my.send(:update_database_yml_db_adapters_in_yml, mysql_database_yml).should eql("--- \nproduction: \n  username: rails1\n  adapter: mysql2\n  database: rails1\n  password: Nut4KBvOqHJ5\n  socket: /var/run/mysqld/mysqld.sock\ndevelopment: \n  username: rails1\n  adapter: mysql2\n  database: rails1_development\n  password: Nut4KBvOqHJ5\n  socket: /var/run/mysqld/mysqld.sock\n")
     end
   end
 end

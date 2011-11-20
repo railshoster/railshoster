@@ -2,18 +2,10 @@ module Railshoster
   module InitCapistranoHelpers
     
     protected
-    
+
     def create_deployrb(app_hash)
       deployrb_str = ""
-      
-      # Choose the further process depending on the application type by applying a strategy pattern.
-      case app_hash["t"].to_sym
-        when :h, :v
-          # Shared Hosting Deployments
-          deployrb_str = Railshoster::Capistrano::Config.render_deploy_rb_to_s(app_hash)        
-        else
-          raise UnsupportedApplicationTypeError.new
-      end
+      deployrb_str = Railshoster::Capistrano::Config.render_deploy_rb_to_s(app_hash)             
     end    
     
     def write_deploy_rb(deployrb_str)

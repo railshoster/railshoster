@@ -9,7 +9,25 @@ module Railshoster
     
     protected
     
-    def update_database_yml_adapters(dbyml_str)      
+    # Receive and update a database.yml via SFTP.
+    def update_database_yml_db_adapters_via_ssh(host = @app_hash["h"], ssh_username = @app_hash["u"], path_to_dbyml = @app_hash["remote_db_yml"])
+      dbyml = ""
+      Net::SFTP.start(host, ssh_username) do |sftp|                
+        sftp.file.open(path_to_dbyml) do |file|
+          dbyml = file.read
+        end
+        sftp.file.open(path_to_dbyml, "w+") do |file|
+          file.write(update_database_yml_db_adapters_in_yml(dbyml))
+        end
+      end
+    end
+    
+    def get_path_to_dbyml
+      
+    end
+    
+    # Takes a yml string, replaces the db adapters and produces yml again.
+    def update_database_yml_db_adapters_in_yml(dbyml_str)      
       dbyml = YAML.load(dbyml_str)      
       db_adapter = DB_GEM_TO_DB_ADAPTER[@app_hash["db_gem"].downcase]
       
@@ -20,27 +38,15 @@ module Railshoster
       YAML.dump(dbyml)
     end    
     
-    # Receive a database.yml
+    # Receive a database.yml via SFTP.
     def get_database_yml(host, ssh_username, path_to_dbyml)
+      dbyml = ""
       Net::SFTP.start(host, ssh_username) do |sftp|                
         sftp.file.open(path_to_dbyml) do |file|
           dbyml = file.read
         end
       end
       dbyml
-    end  
-    
-    # Receive and update a database.yml
-    def update_database_yml_db_adapters(host, ssh_username, path_to_dbyml)
-      dbyml = ""
-      Net::SFTP.start(host, ssh_username) do |sftp|                
-        sftp.file.open(path_to_dbyml) do |file|
-          dbyml = file.read
-        end
-        sftp.file.open(path_to_dbyml, "w+") do |file|
-          file.write(update_database_yml_adapters(dbyml))
-        end
-      end
-    end
+    end          
   end
 end

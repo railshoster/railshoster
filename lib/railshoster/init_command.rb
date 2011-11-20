@@ -36,7 +36,8 @@ module Railshoster
       check_system_requirements
       check_project_requirements      
       @app_hash = parse_application_json_hash(@application_hash_as_json_string)
-      run_by_application_hash
+      expand_app_hash_product_specifically
+      process_application_hash
     end
     
     #### Static
@@ -59,8 +60,8 @@ module Railshoster
     
     protected
     
-    def run_by_application_hash      
-      
+    def process_application_hash      
+      expand_app_hash_product_specifically
       # e.g. mysql2
       @app_hash["db_gem"] = get_db_gem
             
@@ -73,10 +74,28 @@ module Railshoster
       @app_hash["public_ssh_key"] = Pathname.new(selected_key[:path]).basename.to_s.gsub(".pub", "")
           
       create_remote_authorized_key_file_from_app_hash(@app_hash, selected_key)      
+      
+      @app_hash["remote_db_yml"]  = "#{@app_hash["deploy_to"]}/shared/config/database.yml"
+      update_database_yml_db_adapters_via_ssh
+      
       deployrb_str = create_deployrb(@app_hash)      
       write_deploy_rb(deployrb_str)
       capify_project
       success_message
+    end
+    
+    # Add values ot app_hash specific to the given product type.
+    def expand_app_hash_product_specifically            
+      case app_hash["t"].to_sym
+        when :h
+          @app_hash["deploy_to"]      = "/home/#{@app_hash['u']}/#{@app_hash['a']}"
+          @app_hash["app_url"]        = "http://#{@app_hash['u']}-#{@app_hash['aid']}.#{@app_hash['h']}"
+        when :v
+          @app_hash["deploy_to"]      = "/var/www/#{@app_hash['a']}"                       
+          @app_hash["app_url"]        = "http://#{@app_hash['a']}.#{@app_hash['h']}"
+        else
+          raise UnsupportedApplicationTypeError.new
+      end
     end
         
     # Decodoes token to get the JSON hash back.
@@ -92,6 +111,7 @@ module Railshoster
         msg = "The application hash you have passed is malformed. It could not be parsed as regular JSON. It looked like this:\n\n #{app_hash_as_json_string.inspect}\n"  
         raise BadApplicationJSONHashError.new(msg + "\nHere is what the JSON parse said:\n\n" + e.message)
       end
+      ruby_app_hash
     end
       
     def success_message

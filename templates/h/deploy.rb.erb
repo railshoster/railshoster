@@ -51,11 +51,7 @@ set :use_sudo, false
 
 # set the location where to deploy the new project
 
-<% if app["t"].eql?("h") then %>
-set :deploy_to, "/home/#{user}/#{application}"
-<% else %>
-set :deploy_to, "/var/www/#{user}"
-<% end %>
+set :deploy_to, "<%= app["deploy_to"] %>"
 
 # live
 role :app, "<%= app["h"]%>"
@@ -84,12 +80,7 @@ namespace :railshoster do
   desc "Show the url of your app."
   task :appurl do
     puts "\nThe default RailsHoster.com URL of your app is:"
-    
-    <% if app["t"].eql?("h") then %>
-      puts "\nhttp://#{user}-<%= app["aid"] %>.<%= app["h"]%>"    
-    <% else %>
-      puts "\nhttp://#{user}.<%= app["h"]%>"    
-    <% end %>
+    puts "\n<%= app["app_url"] %>"    
     puts "\n"
   end
 end
