@@ -41,6 +41,5 @@ module Railshoster
       end
       found_supported_db_gems.first
     end
-    
   end
 end

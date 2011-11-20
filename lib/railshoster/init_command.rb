@@ -2,7 +2,6 @@ require 'base64'
 require 'json'
 require 'git'
 require 'fileutils'
-require 'net/sftp'
 require 'bundler'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '/capistrano/config'))
@@ -10,6 +9,7 @@ require File.expand_path(File.join(File.dirname(__FILE__), '/init_ssh_helpers'))
 require File.expand_path(File.join(File.dirname(__FILE__), '/init_capistrano_helpers'))
 require File.expand_path(File.join(File.dirname(__FILE__), '/init_validation_helpers'))
 require File.expand_path(File.join(File.dirname(__FILE__), '/init_gem_helpers'))
+require File.expand_path(File.join(File.dirname(__FILE__), '/init_database_helpers'))
 
 module Railshoster
   
@@ -23,7 +23,8 @@ module Railshoster
     include Railshoster::InitSshHelpers
     include Railshoster::InitCapistranoHelpers
     include Railshoster::InitGemHelpers
-    include Railshoster::InitValidationHelpers    
+    include Railshoster::InitValidationHelpers  
+    include Railshoster::InitDatabaseHelpers    
     
     def initialize(project_dir, application_hash_as_json_string)
       super(project_dir)    

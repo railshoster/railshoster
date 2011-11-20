@@ -1,0 +1,13 @@
+production:
+  adapter: mysql
+  database: rails1
+  username: rails1
+  password: Nut4KBvOqHJ5
+  socket: /var/run/mysqld/mysqld.sock
+
+development:
+  adapter: mysql
+  database: rails1_development
+  username: rails1
+  password: Nut4KBvOqHJ5
+  socket: /var/run/mysqld/mysqld.sock
