@@ -34,9 +34,6 @@ command [:init] do |c|
     cwd = FileUtils.pwd      
     ask_for_project_dir(cwd) if args.empty?        
     project_git_dir_name = args[0] || cwd
-        
-    
-    
     
     if options[:a] then
       Railshoster::InitCommand.run_by_application_token(project_git_dir_name, options[:a])    
@@ -92,8 +89,7 @@ end
 
 #### Helper methods
 
-def print_error(exception)    
-  
+def print_error(exception)
   puts "\n"
   puts "-" * 50
   puts "Sorry. An Exception has occured. Don't worry I try to explain what happened:"

@@ -65,3 +65,7 @@ h3. 0.6.0
 * Analysis of Gemfile.lock to determine your database adapter to modify database.yml.
 * Refactored product specific settings. 
 * Moved from deploy.rb.yml into init_comand. added database.yml update via sftp
+
+h3. 0.6.1
+
+* Added a more meaningful error message when being invoked with a non-git repo.

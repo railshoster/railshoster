@@ -9,7 +9,7 @@ module Railshoster
       begin      
         @git = Git.open(project_dir)
       rescue ArgumentError => e
-        raise PossiblyNotAGitRepoError.new(e)
+        raise PossiblyNotAGitRepoError.new("WARNING: Please verify that your app is a valid Git repository and that there is a 'remote origin' given.")
       end
     end
     
