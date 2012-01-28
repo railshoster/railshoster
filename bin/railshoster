@@ -59,6 +59,29 @@ command [:deploy] do |c|
   end
 end
 
+desc "Setup your application on RailsHoster.com"
+arg_name 'dir_name'
+long_desc "Use this command to setup your application on RailsHoster.com after you have successfully initialized it using the 'init' command."
+command ["deploy:setup"] do |c|
+  c.action do |global_options,options,args|
+    project_git_dir_name = args[0] || FileUtils.pwd
+    Railshoster::DeployCommand.new(project_git_dir_name).deploy_setup
+    
+    puts "\nNow, where you have setup your app you should run the 'deploy:cold' command."
+    
+  end
+end
+
+desc "Deploy your application the first time to RailsHoster.com"
+arg_name 'dir_name'
+long_desc "Use this command to deploy your application on RailsHoster.com the first time."
+command ["deploy:cold"] do |c|
+  c.action do |global_options,options,args|
+    project_git_dir_name = args[0] || FileUtils.pwd
+    Railshoster::DeployCommand.new(project_git_dir_name).deploy_cold
+  end
+end
+
 desc "Show the default RailsHoster.com URL for your app."
 long_desc "Whenever you ask what the initial RailsHoster.com URL of your app was just invoke this command. It will tell you."
 command [:appurl] do |c|

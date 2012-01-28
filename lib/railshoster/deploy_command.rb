@@ -12,5 +12,17 @@ module Railshoster
         system("cap deploy")
       end
     end
+    
+    def deploy_setup
+      if_project_already_initialized do
+        system("cap deploy:setup")
+      end
+    end
+    
+    def deploy_cold
+      if_project_already_initialized do
+        system("cap deploy:cold")
+      end
+    end
   end
 end
