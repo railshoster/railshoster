@@ -27,7 +27,9 @@ module Railshoster
       end
       
       unless found_unsupported_db_gems.empty? then
-        puts "Attention: You are using unsupported database gems. This might cause problems: #{found_unsupported_db_gems.inspect}"
+        puts "Attention:\nYour Gemfile.lock tells me that you are using at least one unsupported database gem:\n\n"
+        puts found_unsupported_db_gems.map {|g| "* #{g.name}"}.join("\n")
+        puts "\n"
       end
 
       if found_supported_db_gems.size == 1 then
@@ -37,7 +39,7 @@ module Railshoster
         puts "You are using more than one supported database gem. Hence I cannot uniquely identify the gem your app depends on. Please change your Gemfile and perform bundle update to update your Gemfile.lock file."  
         raise("Abortet. Ambigious database gem information.")
       else
-        raise("Abortet. Haven't found a supported database gem. Please consider to use mysql2.")
+        raise('Abortet. Please update your Gemfile to with "gem mysql" or "gem mysql2" and run "bundle update" to update your Gemfile.lock.')
       end
       found_supported_db_gems.first
     end

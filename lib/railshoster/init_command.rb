@@ -60,7 +60,7 @@ module Railshoster
     
     protected
     
-    def process_application_hash      
+    def process_application_hash
       expand_app_hash_product_specifically
       # e.g. mysql2
       @app_hash["db_gem"] = get_db_gem.name

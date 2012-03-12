@@ -69,3 +69,7 @@ h3. 0.6.0
 h3. 0.6.1
 
 * Added a more meaningful error message when being invoked with a non-git repo.
+
+h3. 0.6.3
+
+* Updated message when there's no compatible database gem in Gemfile.lock.
