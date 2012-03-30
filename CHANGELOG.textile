@@ -77,3 +77,7 @@ h3. 0.6.3
 h3. 0.6.4
 
 * Fixed bug that the database.yml will link to the right release
+
+h3. 0.6.5
+
+* Process the asset pipeline if it is supported by the rails version

@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    railshoster (0.6.3)
+    railshoster (0.6.5)
       bundler (>= 1.0.15)
       capistrano
       capistrano-ext
