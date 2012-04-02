@@ -81,3 +81,7 @@ h3. 0.6.4
 h3. 0.6.5
 
 * Process the asset pipeline if it is supported by the rails version
+
+h3. 0.6.6
+
+* Detection whether the Gemfile and Femfile.lock exists

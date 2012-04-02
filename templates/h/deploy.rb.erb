@@ -6,23 +6,31 @@
 #
 ###############################
 
-# BITTE ENTFERNEN SIE DIE FOLGENDE ZEILE WENN SIE BUNDLER NICHT BENUTZEN
-require 'bundler/capistrano'
+Gemfile_exists = File.exists? "Gemfile"
+Gemfile_lock_exists = File.exists? "Gemfile.lock"
 
-rails_v = (Proc.new {
-  file = File.new("Gemfile", "r")
-  while (line = file.gets)
-    if line =~ /gem\s+[\"\']rails[\"\'].+/
-      version = line.scan(/(\d+)\.(\d+)\.(\d+)/).first.map {|x| x.to_i}
-    end
-  end
-  file.close
-  version
-}).call
+if Gemfile_exists && Gemfile_lock_exists
+	require 'bundler/capistrano'
+end
+
+if Gemfile_exists
+	rails_v = (Proc.new {
+	  file = File.new("Gemfile", "r")
+	  while (line = file.gets)
+	    if line =~ /gem\s+[\"\']rails[\"\'].+/
+	      version = line.scan(/(\d+)\.(\d+)\.(\d+)/).first.map {|x| x.to_i}
+	    end
+	  end
+	  file.close
+	  version
+	}).call
+else 
+	rails_v = nil
+end
 
 #### Use the asset-pipeline
 
-if rails_v[0] >= 3 && rails_v[1] >= 1
+if rails_v != nil && rails_v[0] >= 3 && rails_v[1] >= 1
   load 'deploy/assets'
 end
 
@@ -101,7 +109,7 @@ namespace :railshoster do
   end
 end
 
-if rails_v[0] >= 3 && rails_v[1] >= 1
+if rails_v != nil && rails_v[0] >= 3 && rails_v[1] >= 1
   before "deploy:assets:precompile", "deploy:additional_symlink"
   after "deploy:create_symlink", "deploy:migrate"
 else
