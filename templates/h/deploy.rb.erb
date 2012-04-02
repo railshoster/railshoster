@@ -14,7 +14,7 @@ def gemfile_lock_exists?
 	File.exists? "Gemfile.lock"
 end
 
-def get_rails_version
+def rails_version
 	if gemfile_exists? 
 		rails_v = (Proc.new {
 		  file = File.new("Gemfile", "r")
@@ -33,7 +33,7 @@ def get_rails_version
 end
 
 def rails_version_supports_assets?
-	rails_v = get_rails_version
+	rails_v = rails_version
 	return rails_v != nil && rails_v[0] >= 3 && rails_v[1] >= 1
 end
 
