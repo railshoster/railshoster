@@ -73,3 +73,19 @@ h3. 0.6.1
 h3. 0.6.3
 
 * Updated message when there's no compatible database gem in Gemfile.lock.
+
+h3. 0.6.4
+
+* Fixed bug that the database.yml will link to the right release
+
+h3. 0.6.5
+
+* Process the asset pipeline if it is supported by the rails version
+
+h3. 0.6.6
+
+* Detection whether the Gemfile and Femfile.lock exists
+
+h3. 0.6.7
+
+* Get an error if no ssh key or ssh-direcotry exists
