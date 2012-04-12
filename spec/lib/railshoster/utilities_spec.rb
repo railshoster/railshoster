@@ -75,6 +75,11 @@ describe Railshoster::Utilities do
       keys.first[:key_data].should eql("AAAAB3NzaC1yc2EAAAADAQABAAABAQDwnMABQ9xWwYdhHaaoNSzFMfXmytWHgkBmDg6v8Fn3oILqOMs99IPd7ChPetDdUWYV2pzLVVKB/kwrcoodRC4H6YHn8xk1oI+gDsv4Yg7ytWwgnDf5zXwWMVQ/IqfOdfxRwS1UCrKL7UsVfIUPzXmkia7PoMoQNnM8jbDRDcfyis3Q1VZ9OjIlM/RfqjH0hGFS95nd6geNwpSbSpg4HxNmfltQ6GpoqclQXX0QdBO+q93sn33JjFPEhYuLvQcoea7Tl0zRY0AGQ9r7562QFlWqMmB+9YXcsZu2OZSk7t5a39jral0jEuEeJB56kb5ZUqRA1DJI5En09/WUPLCYprdb")
     end
     
+    it "should be 0 ssh-keys if the ssh-directory doesn't exists" do
+      keys = Railshoster::Utilities.find_public_ssh_keys(File.join(File.dirname(__FILE__), "..", "..", "fakefs", "fake_dot_ssh", "this_does_not_exist"), :verbose => false)
+      keys.size.should be(0)
+    end
+    
     it "should select a public ssh key without a dialog if there is only a single valid key" do 
       key = Railshoster::Utilities.select_public_ssh_key(File.join(File.dirname(__FILE__), "..", "..", "fakefs", "fake_dot_ssh", "1_valid_key"), :verbose => false)
       key[:format].should eql("ssh-rsa")

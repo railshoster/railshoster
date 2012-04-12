@@ -85,3 +85,7 @@ h3. 0.6.5
 h3. 0.6.6
 
 * Detection whether the Gemfile and Femfile.lock exists
+
+h3. 0.6.7
+
+* Get an error if no ssh key or ssh-direcotry exists
