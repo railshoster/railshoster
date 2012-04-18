@@ -32,6 +32,11 @@ module Railshoster
     
     def self.select_public_ssh_key(ssh_dir =  File.join(get_user_home, ".ssh"), options = {:verbose => true})
       keys = Railshoster::Utilities.find_public_ssh_keys(ssh_dir, options)
+      
+      if keys.size == 0 
+        raise NoSshKeyGivenError.new("No SSH key given. Use the ssh-keygen command to generate one.")
+      end
+      
       return keys.first if keys.size == 1
 
       puts "\nThere are multiple public ssh keys. Please choose your deploy key:"
