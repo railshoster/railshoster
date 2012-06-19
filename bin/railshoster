@@ -36,6 +36,11 @@ command [:init] do |c|
     project_git_dir_name = args[0] || cwd
     
     if options[:a] then
+      
+      while options[:a].include?('\\n') 
+        options[:a] = options[:a].gsub('\\n', "\n")
+      end
+
       Railshoster::InitCommand.run_by_application_token(project_git_dir_name, options[:a])    
     elsif options[:j] then
       Railshoster::InitCommand.new(project_git_dir_name, options[:j]).start
