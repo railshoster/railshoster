@@ -61,6 +61,7 @@ module Railshoster
     protected
     
     def process_application_hash
+      expand_app_hash
       expand_app_hash_product_specifically
       # e.g. mysql2
       @app_hash["db_gem"] = get_db_gem.name
@@ -76,23 +77,35 @@ module Railshoster
       create_remote_authorized_key_file_from_app_hash(@app_hash, selected_key)      
       
       @app_hash["remote_db_yml"]  = "#{@app_hash["deploy_to"]}/shared/config/database.yml"
-      update_database_yml_db_adapters_via_ssh
+
+      @app_hash["h"].each do |host|
+        update_database_yml_db_adapters_via_ssh(host)
+      end
       
       deployrb_str = create_deployrb(@app_hash)      
       write_deploy_rb(deployrb_str)
       capify_project
       success_message
     end
+
+    def expand_app_hash
+
+      # Turn "h" in to an array unless it's not already one.
+      @app_hash["h"] = [ @app_hash["h"] ] unless @app_hash["h"].is_a?(Array)
+    end
     
     # Add values ot app_hash specific to the given product type.
-    def expand_app_hash_product_specifically            
+    def expand_app_hash_product_specifically
       case @app_hash["t"].to_sym
         when :h
           @app_hash["deploy_to"]      = "/home/#{@app_hash['u']}/#{@app_hash['a']}"
           @app_hash["app_url"]        = "http://#{@app_hash['u']}-#{@app_hash['aid']}.#{@app_hash['h']}"
         when :v
-          @app_hash["deploy_to"]      = "/var/www/#{@app_hash['a']}"                       
+          @app_hash["deploy_to"]      = "/var/www/#{@app_hash['a']}"
           @app_hash["app_url"]        = "http://#{@app_hash['a']}.#{@app_hash['h']}"
+        when :pc 
+          @app_hash["deploy_to"]      = "/var/www/#{@app_hash['a']}"
+          @app_hash["app_url"]        = "http://#{@app_hash['au']}"
         else
           raise UnsupportedApplicationTypeError.new
       end
