@@ -19,7 +19,7 @@ def rails_version
     rails_v = (Proc.new {
       file = File.new("Gemfile", "r")
       while (line = file.gets)
-        if line =~ /gem\s+[\"\']rails[\"\'].+/
+        if line =~ /^\s*gem\s+[\"\']rails[\"\'].+/
         version = line.scan(/(\d+)\.(\d+)\.(\d+)/).first.map {|x| x.to_i}
       end
     end
