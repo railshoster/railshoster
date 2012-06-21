@@ -9,19 +9,26 @@ module Railshoster
       if app_hash["t"].eql?("h") then
         
         # For a hosting package the password is the deploy user's password
-        create_remote_authorized_key_file(app_hash["h"], app_hash["u"], app_hash["p"], key)
+        create_remote_authorized_key_file(app_hash["h"].first, app_hash["u"], app_hash["p"], key)
       elsif app_hash["t"].eql?("v") then
         
         # For a vps the given password it the root user's password -> Register key for root user
-        create_remote_authorized_key_file(app_hash["h"], "root", app_hash["p"], key)        
+        create_remote_authorized_key_file(app_hash["h"].first, "root", app_hash["p"], key)        
         
         # Also register the public key to enable key access to the deploy user  
-        create_remote_authorized_key_file(app_hash["h"], "root", app_hash["p"], key, "/home/#{app_hash['u']}/.ssh", app_hash['u'])        
+        create_remote_authorized_key_file(app_hash["h"].first, "root", app_hash["p"], key, "/home/#{app_hash['u']}/.ssh", app_hash['u'])        
+      elsif app_hash["t"].eql?("pc") then
+
+        # For a private cloud setup we act on several vps
+        # but in this case the app_hash stores the deploy user's password not the root password as for vps setups
+        app_hash["h"].each do |host|
+           create_remote_authorized_key_file(host, app_hash["u"], app_hash["p"], key)
+        end
       else
         raise("Initialization aborted. Invalid product type: #{app_hash['t']}.")
-      end            
-    end     
-    
+      end
+    end
+
     # Creates a remote authorized keys file for the given public key
     #
     # === Parameters
@@ -37,7 +44,7 @@ module Railshoster
 
         #TODO Smarter way to determine home directory
         stats = sftp.stat!("/home/#{target_username}") if target_username
-        
+
         begin
           sftp.mkdir!(remote_dot_ssh_path)
           sftp.setstat(remote_dot_ssh_path, :uid => stats.uid, :gid => stats.gid) if target_username

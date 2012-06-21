@@ -19,7 +19,7 @@ def rails_version
     rails_v = (Proc.new {
       file = File.new("Gemfile", "r")
       while (line = file.gets)
-        if line =~ /gem\s+[\"\']rails[\"\'].+/
+        if line =~ /^\s*gem\s+[\"\']rails[\"\'].+/
         version = line.scan(/(\d+)\.(\d+)\.(\d+)/).first.map {|x| x.to_i}
       end
     end
@@ -91,9 +91,12 @@ set :use_sudo, false
 set :deploy_to, "<%= app["deploy_to"] %>"
 
 # live
-role :app, "<%= app["h"]%>"
-role :web, "<%= app["h"]%>"
-role :db,  "<%= app["h"]%>", :primary => true
+<% app["h"].each do |ahost| %>
+  role :app, "<%= ahost %>"
+  role :web, "<%= ahost %>"
+<% end %>
+
+role :db,  "<%= app["h"].first %>", :primary => true
 
 # railshoster bundler settings
 set :bundle_flags, "--deployment --binstubs"
