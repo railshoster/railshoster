@@ -7,7 +7,10 @@ require 'fileutils'
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'railshoster'))
 
 require 'gli'
-include GLI
+
+gli_version_greater_than_2 = GLI::VERSION >= '2.0.0'
+
+include gli_version_greater_than_2 ? GLI::App : GLI
 
 version Railshoster::VERSION
 
@@ -144,4 +147,8 @@ def ask_for_project_dir(current_working_dir)
   end      
 end
 
-exit GLI.run(ARGV)
+if gli_version_greater_than_2
+  exit run(ARGV)
+else 
+  exit GLI.run(ARGV)
+end
