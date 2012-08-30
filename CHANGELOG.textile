@@ -94,3 +94,7 @@ h3. 0.6.9
 
 * Support GLI 1.x.x and 2.x.x
 
+h3. 0.6.10
+
+* Ask for ssh password if the init-hash doesn't work
+

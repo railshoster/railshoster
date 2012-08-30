@@ -70,19 +70,22 @@ module Railshoster
       git_url = get_git_remote_url_from_git_config          
       @app_hash["git"] = git_url
 
-      #TODO Add connection test -> If there's already access -> no need to do this
-      selected_key = Railshoster::Utilities.select_public_ssh_key  
-      @app_hash["public_ssh_key"] = Pathname.new(selected_key[:path]).basename.to_s.gsub(".pub", "")
-          
-      create_remote_authorized_key_file_from_app_hash(@app_hash, selected_key)      
+      sftp_session = try_to_get_a_sftp_session_without_password(@app_hash["h"].first, @app_hash["u"])
       
+      if sftp_session == nil
+        selected_key = Railshoster::Utilities.select_public_ssh_key  
+        @app_hash["public_ssh_key"] = Pathname.new(selected_key[:path]).basename.to_s.gsub(".pub", "")
+        create_remote_authorized_key_file_from_app_hash(@app_hash, selected_key) 
+      end     
+    
       @app_hash["remote_db_yml"]  = "#{@app_hash["deploy_to"]}/shared/config/database.yml"
 
       @app_hash["h"].each do |host|
-        update_database_yml_db_adapters_via_ssh(host)
+        update_database_yml_db_adapters_via_ssh(host, sftp_session)
       end
       
-      deployrb_str = create_deployrb(@app_hash)      
+
+      deployrb_str = create_deployrb(@app_hash)     
       write_deploy_rb(deployrb_str)
       capify_project
       success_message

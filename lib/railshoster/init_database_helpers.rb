@@ -10,16 +10,19 @@ module Railshoster
     protected
     
     # Receive and update a database.yml via SFTP.
-    def update_database_yml_db_adapters_via_ssh(host, ssh_username = @app_hash["u"], path_to_dbyml = @app_hash["remote_db_yml"])
+    def update_database_yml_db_adapters_via_ssh(host, sftp_session=nil, ssh_username = @app_hash["u"], path_to_dbyml = @app_hash["remote_db_yml"])
       dbyml = ""
-      Net::SFTP.start(host, ssh_username) do |sftp|                
-        sftp.file.open(path_to_dbyml) do |file|
-          dbyml = file.read
-        end
-        sftp.file.open(path_to_dbyml, "w+") do |file|
-          file.write(update_database_yml_db_adapters_in_yml(dbyml))
-        end
+      
+      sftp_session ||= Net::SFTP.start(host, ssh_username)
+                     
+      sftp_session.file.open(path_to_dbyml) do |file|
+        dbyml = file.read
       end
+      
+      sftp_session.file.open(path_to_dbyml, "w+") do |file|
+        file.write(update_database_yml_db_adapters_in_yml(dbyml))
+      end
+      
     end
     
     def get_path_to_dbyml
