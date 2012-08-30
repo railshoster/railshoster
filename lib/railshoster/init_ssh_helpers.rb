@@ -64,18 +64,13 @@ module Railshoster
         
     end
     
-    # tries to connect without password, returns true if successfull false else
-    def remote_authorized_key_file_exists?(host, user)
-     
-     #TODO the ssh passphrase is asked twice, on times here and on times in InitDatabaseHelpers#update_database_yml_db_adapters_via_ssh
+    def try_to_get_a_sftp_session_without_password(host, user)
+    
       begin 
-        Net::SFTP.start(host, user) do |sftp|
-        end
+        return Net::SFTP.start(host, user)
       rescue Net::SSH::AuthenticationFailed => e
-        return false
+        return nil
       end
-      
-      return true
       
     end
     
