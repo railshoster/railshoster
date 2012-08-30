@@ -1,4 +1,5 @@
 require 'net/sftp'
+require 'highline/import'
 
 module Railshoster
   module InitSshHelpers
@@ -40,21 +41,46 @@ module Railshoster
     def create_remote_authorized_key_file(host, ssh_username, password, key, remote_dot_ssh_path = ".ssh", target_username = nil)
 
       remote_authorized_keys_path = remote_dot_ssh_path + "/authorized_keys"
-      Net::SFTP.start(host, ssh_username, :password => password) do |sftp|                
-
-        #TODO Smarter way to determine home directory
-        stats = sftp.stat!("/home/#{target_username}") if target_username
-
-        begin
-          sftp.mkdir!(remote_dot_ssh_path)
-          sftp.setstat(remote_dot_ssh_path, :uid => stats.uid, :gid => stats.gid) if target_username
-        rescue Net::SFTP::StatusException => e
-          # Most likely the .ssh folder already exists raise again if not.
-          raise e unless e.code == 4
+      
+      begin 
+  
+        Net::SFTP.start(host, ssh_username, :password => password) do |sftp|                
+          #TODO Smarter way to determine home directory
+          stats = sftp.stat!("/home/#{target_username}") if target_username
+  
+          begin
+            sftp.mkdir!(remote_dot_ssh_path)
+            sftp.setstat(remote_dot_ssh_path, :uid => stats.uid, :gid => stats.gid) if target_username
+          rescue Net::SFTP::StatusException => e
+            # Most likely the .ssh folder already exists raise again if not.
+            raise e unless e.code == 4
+          end
+          sftp.upload!(key[:path].to_s, remote_authorized_keys_path)
+          sftp.setstat(remote_authorized_keys_path, :uid => stats.uid, :gid => stats.gid) if target_username 
+        end 
+      rescue Net::SSH::AuthenticationFailed => e
+        create_remote_authorized_key_file(host, ssh_username, ask_for_ssh_password(ssh_username), key, remote_dot_ssh_path, target_username)
+      end
+        
+    end
+    
+    # tries to connect without password, returns true if successfull false else
+    def remote_authorized_key_file_exists?(host, user)
+     
+     #TODO the ssh passphrase is asked twice, on times here and on times in InitDatabaseHelpers#update_database_yml_db_adapters_via_ssh
+      begin 
+        Net::SFTP.start(host, user) do |sftp|
         end
-        sftp.upload!(key[:path].to_s, remote_authorized_keys_path)
-        sftp.setstat(remote_authorized_keys_path, :uid => stats.uid, :gid => stats.gid) if target_username 
-      end      
+      rescue Net::SSH::AuthenticationFailed => e
+        return false
+      end
+      
+      return true
+      
+    end
+    
+    def ask_for_ssh_password(user)
+      ask("Enter ssh password for user #{user}: ") { |q| q.echo = false }
     end
   end
 end
