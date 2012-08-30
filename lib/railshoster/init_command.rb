@@ -84,7 +84,7 @@ module Railshoster
         update_database_yml_db_adapters_via_ssh(host, sftp_session)
       end
       
-      
+
       deployrb_str = create_deployrb(@app_hash)     
       write_deploy_rb(deployrb_str)
       capify_project
