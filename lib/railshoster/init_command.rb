@@ -102,7 +102,7 @@ module Railshoster
       case @app_hash["t"].to_sym
         when :h
           @app_hash["deploy_to"]      = "/home/#{@app_hash['u']}/#{@app_hash['a']}"
-          @app_hash["app_url"]        = "http://#{@app_hash['u']}-#{@app_hash['aid']}.#{@app_hash['h']}"
+          @app_hash["app_url"]        = "http://#{@app_hash['u']}-#{@app_hash['aid']}.#{@app_hash['h'].first}"
         when :v
           @app_hash["deploy_to"]      = "/var/www/#{@app_hash['a']}"
           @app_hash["app_url"]        = "http://#{@app_hash['a']}.#{@app_hash['h']}"
