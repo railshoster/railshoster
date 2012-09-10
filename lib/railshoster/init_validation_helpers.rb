@@ -1,4 +1,3 @@
-require 'sane'
 
 module Railshoster
   
@@ -37,12 +36,12 @@ module Railshoster
     end
         
     def check_os
-      if OS.windows? then
+      if RUBY_PLATFORM.downcase.include?("mswin") then
         puts "\nWarning: This software requires a Unix/Linux/BSD OS. Do you really want to proceed?"
         decision = STDIN.gets.chomp
         unless %w(y Y).include?(decision) then
           raise("Initialization aborted. Bad operating system.")
-        end              
+        end           
       end
     end        
   end
