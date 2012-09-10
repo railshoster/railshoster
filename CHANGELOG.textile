@@ -98,3 +98,9 @@ h3. 0.6.10
 
 * Ask for ssh password if the init-hash doesn't work
 
+h3. 0.6.11
+
+* Bugfix: The appurl command now works even with ruby 1.9.2
+* Bugfix: No need to include rails in the Gemfile if it is already required from an other gem
+* Bugfix: Rails compatibility problem
+
