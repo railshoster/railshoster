@@ -15,26 +15,14 @@ def gemfile_lock_exists?
 end
 
 def rails_version
-  if gemfile_exists? 
-    rails_v = (Proc.new {
-      file = File.new("Gemfile", "r")
-      while (line = file.gets)
-        if line =~ /^\s*gem\s+[\"\']rails[\"\'].+/
-        version = line.scan(/(\d+)\.(\d+)\.(\d+)/).first.map {|x| x.to_i}
-      end
-    end
-    file.close
-    version
-    }).call
-  else 
-    rails_v = nil
-  end
-    return rails_v
+  stdout = `bundle list rails`
+  matches = stdout.scan(/\/rails-(\d+\.\d+\.\d+)$/).first
+  matches ? matches.first : nil
 end
 
 def rails_version_supports_assets?
-  rails_v = rails_version
-  return rails_v != nil && rails_v[0] >= 3 && rails_v[1] >= 1
+  rv = rails_version
+  rv ? rv >= "3.1.0" : false
 end
 
 if gemfile_exists? && gemfile_lock_exists?
