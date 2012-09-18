@@ -61,8 +61,8 @@ module Railshoster
     protected
     
     def process_application_hash
-      expand_app_hash
       expand_app_hash_product_specifically
+      
       # e.g. mysql2
       @app_hash["db_gem"] = get_db_gem.name
             
@@ -99,6 +99,9 @@ module Railshoster
     
     # Add values ot app_hash specific to the given product type.
     def expand_app_hash_product_specifically
+      
+      expand_app_hash
+      
       case @app_hash["t"].to_sym
         when :h
           @app_hash["deploy_to"]      = "/home/#{@app_hash['u']}/#{@app_hash['a']}"
