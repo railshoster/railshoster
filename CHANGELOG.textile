@@ -104,3 +104,7 @@ h3. 0.6.11
 * Bugfix: No need to include rails in the Gemfile if it is already required from an other gem
 * Bugfix: Rails compatibility problem
 
+h3. 0.6.12
+
+* Small Bugfix
+
