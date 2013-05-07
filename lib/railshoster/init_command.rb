@@ -3,7 +3,6 @@ require 'json'
 require 'git'
 require 'fileutils'
 require 'bundler'
-require 'pp'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '/capistrano/config'))
 require File.expand_path(File.join(File.dirname(__FILE__), '/init_ssh_helpers'))
