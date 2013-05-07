@@ -3,6 +3,7 @@ require 'json'
 require 'git'
 require 'fileutils'
 require 'bundler'
+require 'pp'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '/capistrano/config'))
 require File.expand_path(File.join(File.dirname(__FILE__), '/init_ssh_helpers'))
@@ -83,7 +84,6 @@ module Railshoster
       @app_hash["h"].each do |host|
         update_database_yml_db_adapters_via_ssh(host, sftp_session)
       end
-      
 
       deployrb_str = create_deployrb(@app_hash)     
       write_deploy_rb(deployrb_str)
@@ -108,7 +108,10 @@ module Railshoster
           @app_hash["app_url"]        = "http://#{@app_hash['u']}-#{@app_hash['aid']}.#{@app_hash['h'].first}"
         when :v
           @app_hash["deploy_to"]      = "/var/www/#{@app_hash['a']}"
-          @app_hash["app_url"]        = "http://#{@app_hash['a']}.#{@app_hash['h']}"
+          @app_hash["app_url"]        = "http://#{@app_hash['a']}.#{@app_hash['h'].first}"
+        when :m
+          @app_hash["deploy_to"]      = "/var/www/#{@app_hash['a']}"
+          @app_hash["app_url"]        = "http://#{@app_hash['a']}.#{@app_hash['h'].first}"
         when :pc 
           @app_hash["deploy_to"]      = "/var/www/#{@app_hash['a']}"
           @app_hash["app_url"]        = "http://#{@app_hash['au']}"
