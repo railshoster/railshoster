@@ -11,7 +11,7 @@ module Railshoster
         
         # For a hosting package the password is the deploy user's password
         create_remote_authorized_key_file(app_hash["h"].first, app_hash["u"], app_hash["p"], key)
-      elsif app_hash["t"].eql?("v") then
+      elsif app_hash["t"].eql?("v") || app_hash["t"].eql?("m") then
         
         # For a vps the given password it the root user's password -> Register key for root user
         create_remote_authorized_key_file(app_hash["h"].first, "root", app_hash["p"], key)        
