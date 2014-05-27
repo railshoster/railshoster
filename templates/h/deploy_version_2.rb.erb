@@ -1,0 +1,122 @@
+###############################
+#
+# Capistrano Deployment on shared Webhosting by RailsHoster
+#
+# maintained by support@railshoster.de
+#
+###############################
+
+def gemfile_exists? 
+  File.exists? "Gemfile"
+end
+
+def gemfile_lock_exists?
+  File.exists? "Gemfile.lock"
+end
+
+def rails_version
+  stdout = `bundle list rails`
+  matches = stdout.scan(/\/rails-(\d+\.\d+\.\d+)$/).first
+  matches ? matches.first : nil
+end
+
+def rails_version_supports_assets?
+  rv = rails_version
+  rv ? rv >= "3.1.0" : false
+end
+
+if gemfile_exists? && gemfile_lock_exists?
+  require 'bundler/capistrano'
+end
+
+#### Use the asset-pipeline
+
+if rails_version_supports_assets?
+  load 'deploy/assets'
+end
+
+#### Personal Settings
+## User and Password
+
+# user to login to the target server
+set :user, "<%= app["u"] %>"
+
+<% if app["public_ssh_key"] then %>
+
+# allow SSH-Key-Forwarding
+set :ssh_options, { :forward_agent => true }  
+ssh_options[:keys] = [File.join(ENV["HOME"], ".ssh", "<%= app["public_ssh_key"] %>")]
+<% else %>
+
+# password to login to the target server
+set :password, "<%= app["p"] %>"
+
+<% end %>
+
+## Application name and repository
+
+# application name ( should be rails1 rails2 rails3 ... )
+set :application, "<%= app["a"] %>"
+
+# repository location
+set :repository, "<%= app["git"]%>"
+
+# :subversionn or :git
+set :scm, :git
+set :scm_verbose, true
+
+#### System Settings
+## General Settings ( don't change them please )
+
+# run in pty to allow remote commands via ssh
+default_run_options[:pty] = true
+
+# don't use sudo it's not necessary
+set :use_sudo, false
+
+# set the location where to deploy the new project
+
+set :deploy_to, "<%= app["deploy_to"] %>"
+
+# live
+<% app["h"].each do |ahost| %>
+  role :app, "<%= ahost %>"
+  role :web, "<%= ahost %>"
+<% end %>
+
+role :db,  "<%= app["h"].first %>", :primary => true
+
+# railshoster bundler settings
+set :bundle_flags, "--deployment --binstubs"
+
+############################################
+# Default Tasks by RailsHoster.de
+############################################
+namespace :deploy do
+  desc "Restarting mod_rails with restart.txt"
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "touch #{current_path}/tmp/restart.txt"
+  end
+
+  desc "Additional Symlinks ( database.yml, etc. )"
+  task :additional_symlink, :roles => :app do
+    run "ln -sf #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+  end
+end
+
+namespace :railshoster do
+  desc "Show the url of your app."
+  task :appurl do
+    puts "\nThe default RailsHoster.com URL of your app is:"
+    puts "\n<%= app["app_url"] %>"    
+    puts "\n"
+  end
+end
+
+if rails_version_supports_assets?
+  before "deploy:assets:precompile", "deploy:additional_symlink"
+  after "deploy:create_symlink", "deploy:migrate"
+else
+  after "deploy:create_symlink", "deploy:additional_symlink", "deploy:migrate"
+end
+

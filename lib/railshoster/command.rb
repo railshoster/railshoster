@@ -1,8 +1,12 @@
 module Railshoster
   
+  require File.expand_path(File.join(File.dirname(__FILE__), '/general_capistrano_helpers'))
+
   # This action class helps to setup a new rails applicaton
   class Command
     
+    include ::Railshoster::GeneralCapistranoHelpers
+
     def initialize(project_dir)      
       @project_dir = project_dir
       

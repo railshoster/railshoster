@@ -1,0 +1,149 @@
+###############################
+#
+# Capistrano Deployment on shared Webhosting by RailsHoster
+#
+# maintained by support@railshoster.de
+#
+###############################
+
+def gemfile_exists? 
+  File.exists? "Gemfile"
+end
+
+def gemfile_lock_exists?
+  File.exists? "Gemfile.lock"
+end
+
+def rails_version
+  stdout = `bundle list rails`
+  matches = stdout.scan(/\/rails-(\d+\.\d+\.\d+)$/).first
+  matches ? matches.first : nil
+end
+
+def rails_version_supports_assets?
+  rv = rails_version
+  rv ? rv >= "3.1.0" : false
+end
+
+if gemfile_exists? && gemfile_lock_exists?
+  begin
+    require 'capistrano/bundler'
+  rescue LoadError
+    puts 'You should add capistrano-bundler to your Gemfile to use bundler integration'
+  end
+end
+
+#### Use the asset-pipeline and setup bulder
+
+set :bundle_roles, :all   
+set :bundle_servers, -> { release_roles(fetch(:bundle_roles)) }
+set :bundle_binstubs, -> { shared_path.join('bin') } 
+set :bundle_without, %w{development test}.join(' ') 
+set :bundle_path, -> { shared_path.join('bundle') }
+set :bundle_flags, '--deployment --quiet'
+set :bundle_bins, %w{gem rake rails}
+
+
+if rails_version_supports_assets?
+  begin
+    require 'capistrano/rails/assets'
+  rescue LoadError
+    puts 'You should add capistrano-rails to your Gemfile to use assets integration'
+  end
+end
+
+
+#### Personal Settings
+
+# application name ( should be rails1 rails2 rails3 ... )
+set :application, "<%= app['a'] %>"
+
+# repository location
+set :repo_url, "<%= app['git'] %>"
+
+# :subversionn or :git
+set :scm, :git
+set :scm_verbose, true
+
+<% if app["public_ssh_key"] then %>
+
+# allow SSH-Key-Forwarding
+set(:ssh_options, {
+  :forward_agent => true, 
+  :auth_methods  => %w{publickey password},
+  :keys => [File.join(ENV["HOME"], ".ssh", "<%= app["public_ssh_key"] %>")]
+})
+<% else %>
+
+# password to login to the target server
+set(:ssh_options, {
+  :forward_agent => true, 
+  :auth_methods  => %w{publickey password},
+  :password => "<%= app["p"] %>"
+})
+
+<% end %>
+
+# live
+<% app["h"].each do |ahost| %>
+server("<%= ahost %>", {
+  :user => "<%= app['u'] %>",
+  :roles => [:web, :app]
+})
+<% end %>
+
+
+server("<%= app['h'].first %>", {
+  :user => "<%= app['u'] %>",
+  :roles => :db,
+  :primary => true
+})
+
+# set the location where to deploy the new project
+set :deploy_to, "<%= app["deploy_to"] %>"
+
+
+set :assets_roles,   :app
+set :assets_prefix, 'assets'
+
+set :linked_dirs, fetch(:linked_dirs, []).push("public/#{fetch(:assets_prefix)}") 
+set :migration_role, :db
+
+# change the environment if needed
+set :rails_env, :production
+
+# enable migration tasks if the deploy.rb was used into a rails app
+if rails_version
+  begin
+    require 'capistrano/rails/migrations'
+  rescue LoadError
+    puts 'You should add capistrano-rails to your Gemfile to use standart features like migrations'
+  end
+end
+
+
+# don't use sudo it's not necessary
+set :use_sudo, false
+
+
+
+############################################
+# Default Tasks by RailsHoster.de
+############################################
+
+namespace :deploy do
+  desc "Restarting mod_rails with restart.txt"
+  task :restart do
+    on roles(:app), :in => :sequence, :wait => 5 do
+      execute "touch #{fetch(:current_path)}/tmp/restart.txt"
+    end
+  end
+
+  desc "Additional Symlinks ( database.yml, etc. )"
+  after :updating, :additional_symlink do
+    on roles(:app) do
+      execute "ln -fs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+    end
+  end
+end
+

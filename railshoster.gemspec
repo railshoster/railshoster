@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.authors     = ["Julian Fischer"]
   s.email       = ["fischer@enterprise-rails.de"]
   s.homepage    = "http://www.railshoster.com"
-  s.summary     = %q{RailsHoster Applicatoin Deployment Suite}
+  s.summary     = %q{RailsHoster Application Deployment Suite}
   s.description = %q{Easily deploy your Rails app to RailsHoster.com by using this gem.}
 
   s.rubyforge_project = "railshoster"
@@ -19,8 +19,9 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   
   s.add_dependency "bundler", ">= 1.0.15"
-  s.add_dependency "capistrano"
-  s.add_dependency "capistrano-ext"
+  s.add_dependency "capistrano"#, "~> 3.0"
+  s.add_dependency "net-sftp"
+  s.add_dependency "highline"
   s.add_dependency "gli", ">= 1.2.5"
   s.add_dependency "json"
   s.add_dependency "git"

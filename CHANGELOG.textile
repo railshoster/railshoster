@@ -108,3 +108,7 @@ h3. 0.6.12
 
 * Small Bugfix
 
+
+h3. 1.0.0
+
+* update to support capistrano 3.x
