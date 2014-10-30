@@ -5,6 +5,7 @@ require 'fileutils'
 require 'bundler'
 
 require File.expand_path(File.join(File.dirname(__FILE__), '/capistrano/config'))
+require File.expand_path(File.join(File.dirname(__FILE__), '/general_capistrano_helpers'))
 require File.expand_path(File.join(File.dirname(__FILE__), '/init_ssh_helpers'))
 require File.expand_path(File.join(File.dirname(__FILE__), '/init_capistrano_helpers'))
 require File.expand_path(File.join(File.dirname(__FILE__), '/init_validation_helpers'))
@@ -20,6 +21,7 @@ module Railshoster
   # * All modifications of the @app_hash must be done within this file not in a helper module. This helps to easily grasp the app_hash structure with all changed made to it.
   class InitCommand < Command        
     
+    include Railshoster::GeneralCapistranoHelpers
     include Railshoster::InitSshHelpers
     include Railshoster::InitCapistranoHelpers
     include Railshoster::InitGemHelpers
@@ -85,8 +87,8 @@ module Railshoster
       end
 
       deployrb_str = create_deployrb(@app_hash)     
-      write_deploy_rb(deployrb_str)
       capify_project
+      write_deploy_rb(deployrb_str)
       success_message
     end
 

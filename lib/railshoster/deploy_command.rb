@@ -9,19 +9,31 @@ module Railshoster
     
     def deploy
       if_project_already_initialized do
-        system("cap deploy")
+        if capistrano_greater_than_2?
+          system("cap production deploy")
+        else
+          system("cap deploy")
+        end
       end
     end
-    
+
     def deploy_setup
       if_project_already_initialized do
-        system("cap deploy:setup")
+        if capistrano_greater_than_2?
+          system("cap production deploy:setup")
+        else
+          system("cap deploy:setup")
+        end
       end
     end
-    
+
     def deploy_cold
       if_project_already_initialized do
-        system("cap deploy:cold")
+        if capistrano_greater_than_2?
+          system("cap production deploy:cold")
+        else
+          system("cap deploy:cold")
+        end
       end
     end
   end

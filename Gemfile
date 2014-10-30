@@ -2,7 +2,10 @@ source "http://rubygems.org"
 
 gemspec
 
-gem 'rspec', :group => :development
+
+group :development do
+  gem 'rspec'
+end
 
 group :test do
   gem 'fakefs'
