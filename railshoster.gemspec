@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   
   s.add_dependency "bundler", ">= 1.0.15"
-  s.add_dependency "capistrano"
+  s.add_dependency "capistrano", "~> 2.15.5"
   s.add_dependency "capistrano-ext"
   s.add_dependency "gli", ">= 1.2.5"
   s.add_dependency "json"
