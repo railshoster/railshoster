@@ -1,8 +1,19 @@
-gemfile: gemfiles/Gemfile.ci
+gemfile: 
+  - gemfiles/rails_3.0_cap_2.gemfile
+  - gemfiles/rails_3.0_cap_3.gemfile
+
+  - gemfiles/rails_3.1_cap_2.gemfile
+  - gemfiles/rails_3.1_cap_3.gemfile
+
+  - gemfiles/rails_3.2_cap_2.gemfile
+  - gemfiles/rails_3.2_cap_3.gemfile
+
+  - gemfiles/rails_4.0.gemfile
+
 rvm:
   - 1.8.7 # (current default)
+  - ree
   - 1.9.2
   - 1.9.3
   - 2.0.0
   - 2.1.0
-  - ree

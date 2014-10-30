@@ -12,10 +12,10 @@ describe Railshoster::Utilities do
     
     it "should create a backup file" do     
       File.new("myfile.txt", "w+")
-      File.exists?("myfile.txt").should be_true
+      File.exists?("myfile.txt").should be(true)
       expect { Railshoster::Utilities.backup_file("myfile.txt") }.to_not raise_error
-      File.exists?("myfile.txt").should be_true
-      File.exists?("myfile.txt.bak").should be_true
+      File.exists?("myfile.txt").should be(true)
+      File.exists?("myfile.txt.bak").should be(true)
     end
     
     it "should create a backup of a backup file and then backup the file" do
@@ -30,9 +30,9 @@ describe Railshoster::Utilities do
         f << "2"
       end            
       expect { Railshoster::Utilities.backup_file("myfile.txt") }.to_not raise_error
-      File.exists?("myfile.txt").should be_true
-      File.exists?("myfile.txt.bak").should be_true
-      File.exists?("myfile.txt.bak.bak").should be_true
+      File.exists?("myfile.txt").should be(true)
+      File.exists?("myfile.txt.bak").should be(true)
+      File.exists?("myfile.txt.bak.bak").should be(true)
       
       File.open("myfile.txt").read.should eql("1")
       
