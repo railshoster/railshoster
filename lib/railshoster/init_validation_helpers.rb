@@ -36,7 +36,8 @@ module Railshoster
     end
         
     def check_os
-      if RUBY_PLATFORM.downcase.include?("mswin") then
+      os = RUBY_PLATFORM.downcase
+      if os.include?("mswin") || os.include?("mingw") then
         puts "\nWarning: This software requires a Unix/Linux/BSD OS. Do you really want to proceed?"
         decision = STDIN.gets.chomp
         unless %w(y Y).include?(decision) then
